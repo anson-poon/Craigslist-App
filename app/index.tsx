@@ -15,7 +15,7 @@ export default function Welcome() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#E1E1E1",
+    backgroundColor: "#F7F7F7",
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
