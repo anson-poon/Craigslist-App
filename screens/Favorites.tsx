@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { View, Text, Button, FlatList, StyleSheet } from "react-native";
-import { CartContext } from "../CartContext";
+import { FavoriteContext } from "../FavoriteContext";
 
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -9,26 +9,14 @@ type RootStackParamList = {
     // Add other screens here if needed
 };
 
-type CartScreenNavigationProp = StackNavigationProp<RootStackParamList, "Cart">;
+type FavoriteScreenNavigationProp = StackNavigationProp<RootStackParamList, "Favorites">;
 
 /*
-    The Cart component displays a list of items in the cart.
+    The Favorites component displays a list of favorite items.
 */
-export function Favorites({ navigation }: { navigation: CartScreenNavigationProp }) {
-    const { items, getItemsCount, getTotalPrice } = useContext(CartContext);
+export function Favorites({ navigation }: { navigation: FavoriteScreenNavigationProp }) {
+    const { items, getItemsCount } = useContext(FavoriteContext);
 
-    function Totals() {
-        let [total, setTotal] = useState(0);
-        useEffect(() => {
-            setTotal(getTotalPrice());
-        });
-        return (
-            <View style={styles.cartLineTotal}>
-                <Text style={[styles.lineLeft, styles.lineTotal]}>Total</Text>
-                <Text style={styles.lineRight}>$ {total}</Text>
-            </View>
-        );
-    }
     function renderItem({
         item,
     }: {
@@ -51,7 +39,6 @@ export function Favorites({ navigation }: { navigation: CartScreenNavigationProp
             data={items}
             renderItem={renderItem}
             keyExtractor={(item) => item.product?.id.toString() ?? Math.random().toString()}
-            ListFooterComponent={Totals}
         />
     );
 }
