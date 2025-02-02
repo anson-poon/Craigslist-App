@@ -1,22 +1,30 @@
 import React from "react";
 import { Text, Image, View, StyleSheet, TouchableOpacity } from "react-native";
-interface ProductProps {
+
+interface ListingProps {
+    id: string;
     name: string;
     price: number;
+    description: string;
+    category: string;
     image: { uri: string };
+    isNew: boolean;
     onPress: () => void;
 }
 
 /*
-    The Product component displays a product card with a name, price, and image.
+    The Listing component displays a listing card with a name, price, and other information
 */
-export function Product({ name, price, image, onPress }: ProductProps) {
+export function Listing({ id, name, price, image, description, category, isNew, onPress }: ListingProps) {
     return (
         <TouchableOpacity style={styles.card} onPress={onPress}>
             <Image style={styles.thumb} source={image} />
             <View style={styles.infoContainer}>
                 <Text style={styles.name}>{name}</Text>
-                <Text style={styles.price}>$ {price}</Text>
+                <Text style={styles.price}>${price}</Text>
+                <Text>{description}</Text>
+                <Text>Category: {category}</Text>
+                <Text>Condition: {isNew ? "New" : "Used"}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -25,7 +33,7 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: "white",
         borderRadius: 12,
-        shadowOpacity: 0.8,
+        shadowOpacity: 0.2,
         shadowRadius: 4,
         shadowColor: "black",
         shadowOffset: {

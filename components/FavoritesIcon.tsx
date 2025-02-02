@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { CartContext } from "../CartContext";
+import { FavoriteContext } from "../FavoriteContext";
 
 import { NavigationProp } from "@react-navigation/native";
 
 export function FavoritesIcon({ navigation }: { navigation: NavigationProp<any> }) {
-    const { getItemsCount } = useContext(CartContext);
     return (
         <View style={styles.container}>
             <Text
@@ -14,7 +13,7 @@ export function FavoritesIcon({ navigation }: { navigation: NavigationProp<any> 
                     navigation.navigate("Favorites");
                 }}
             >
-                Favorites ({getItemsCount()})
+                Favorites
             </Text>
         </View>
     );
