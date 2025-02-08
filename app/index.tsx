@@ -1,12 +1,22 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+
 export default function Welcome() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <Text style={styles.appName}>Craigslist</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/SignIn")}
+      >
         <Text style={styles.buttonText}>Sign in</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/SignUp")}
+      >
         <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
     </View>
