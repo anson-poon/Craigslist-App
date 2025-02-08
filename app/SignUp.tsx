@@ -72,7 +72,7 @@ export default function SignUp() {
       {/* Allow redirect to login screen */}
       <View style={styles.loginContainer}>
         <Text style={styles.loginText}>Already a member?</Text>
-        <TouchableOpacity onPress={() => router.navigate("/SignIn")}>
+        <TouchableOpacity onPress={() => router.replace("/SignIn")}>
           <Text style={styles.loginTextLink}> Log in</Text>
         </TouchableOpacity>
       </View>

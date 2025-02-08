@@ -48,7 +48,7 @@ export default function SignIn() {
       {/* Allow redirect to sign up */}
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Not a member?</Text>
-        <TouchableOpacity onPress={() => router.navigate("/SignUp")}>
+        <TouchableOpacity onPress={() => router.replace("/SignUp")}>
           <Text style={styles.createAccountText}> Create an account</Text>
         </TouchableOpacity>
       </View>
