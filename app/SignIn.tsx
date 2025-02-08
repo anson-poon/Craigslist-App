@@ -6,11 +6,13 @@ import {
   View,
   StyleSheet,
 } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleLogin = () => {
     if (!email || !password) {
@@ -23,7 +25,6 @@ export default function SignIn() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign in to your account</Text>
-      // Input fields for user credentials
       <TextInput
         style={styles.input}
         placeholder="Email or Username"
@@ -38,16 +39,16 @@ export default function SignIn() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      // Show error if necessary
+      {/*  Show error if necessary */}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      // Continue // submit with auth
+      {/*  Continue // submit with auth */}
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
-      // Allow redirect to sign up
+      {/* Allow redirect to sign up */}
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>Not a member?</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.replace("/SignUp")}>
           <Text style={styles.createAccountText}> Create an account</Text>
         </TouchableOpacity>
       </View>

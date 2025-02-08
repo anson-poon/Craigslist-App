@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSignUp = () => {
     if (!email || !username || !password || !confirmPassword) {
@@ -70,7 +72,7 @@ export default function SignUp() {
       {/* Allow redirect to login screen */}
       <View style={styles.loginContainer}>
         <Text style={styles.loginText}>Already a member?</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.replace("/SignIn")}>
           <Text style={styles.loginTextLink}> Log in</Text>
         </TouchableOpacity>
       </View>
