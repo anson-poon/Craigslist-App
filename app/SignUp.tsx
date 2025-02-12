@@ -7,6 +7,9 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebaseConfig";
+import { FirebaseError } from "firebase/app";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -16,7 +19,7 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!email || !username || !password || !confirmPassword) {
       setError("Please fill in all fields.");
       return;
@@ -25,7 +28,18 @@ export default function SignUp() {
       setError("Passwords do not match.");
       return;
     }
-    // TO DO: Handle sign-up logic
+
+    // attempt sign up with function from firebase auth sdk
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      console.log("User signed up:", auth.currentUser);
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setError(error.message);
+      } else {
+        setError("Unknown error encountered.");
+      }
+    }
   };
 
   return (
