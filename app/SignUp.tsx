@@ -53,12 +53,14 @@ export default function SignUp() {
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
@@ -66,6 +68,7 @@ export default function SignUp() {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        textContentType="oneTimeCode"
       />
       <TextInput
         style={styles.input}
@@ -73,6 +76,7 @@ export default function SignUp() {
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
+        textContentType="oneTimeCode"
       />
 
       {/* Show error if necessary */}

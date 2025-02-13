@@ -46,6 +46,7 @@ export default function SignIn() {
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
@@ -53,6 +54,7 @@ export default function SignIn() {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        autoCapitalize="none"
       />
       {/*  Show error if necessary */}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
