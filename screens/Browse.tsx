@@ -3,7 +3,6 @@ import { View, Text, FlatList, StyleSheet } from "react-native";
 import { Listing } from "../components/ListingCard";
 import { getListingsList } from "../services/ListingsService";
 import { NavigationProp } from "@react-navigation/native";
-import { insertSampleListings } from "../services/InsertSampleListings";
 
 interface ListingItem {
     id: string;

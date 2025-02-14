@@ -18,7 +18,7 @@ interface ListingProps {
 export function Listing({ id, name, price, image, description, category, isNew, onPress }: ListingProps) {
     return (
         <TouchableOpacity style={styles.card} onPress={onPress}>
-            <Image style={styles.thumb} source={image} />
+            <Image style={styles.thumb} source={image ? { uri: image } : require("../assets/images/icon.png")} />
             <View style={styles.infoContainer}>
                 <Text style={styles.name}>{name}</Text>
                 <Text style={styles.price}>${price}</Text>
