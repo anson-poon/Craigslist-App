@@ -7,6 +7,9 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { auth } from "../firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -14,12 +17,24 @@ export default function SignIn() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       setError("Please fill in both fields.");
       return;
     }
-    // TO DO: Handle auth
+
+    // attempt sign in with function from firebase auth sdk
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      console.log("Succesfully signed in:", auth.currentUser);
+    } catch (error: unknown) {
+      // error when signing in
+      if (error instanceof FirebaseError) {
+        setError(error.message);
+      } else {
+        setError("Unknown error encountered.");
+      }
+    }
   };
 
   return (
@@ -31,6 +46,7 @@ export default function SignIn() {
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
@@ -38,6 +54,7 @@ export default function SignIn() {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        autoCapitalize="none"
       />
       {/*  Show error if necessary */}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
