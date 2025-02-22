@@ -11,6 +11,10 @@ import { ListingDetails } from "../../screens/ListingDetails";
 import { Favorites } from "../../screens/Favorites";
 import { FavoritesIcon } from "../../components/FavoritesIcon";
 
+import { CreateThisListing } from "../../screens/CreateListing"; // Added this import for creating a listing 
+// import { EditThisListing } from "../../screens/EditListing"; // Added this import for edit a listing - placeholder
+// import { deleteThisListing } from "../../screens/DeleteListing"; // Added this import for delete a listing - placeholder
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -106,6 +110,34 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
                 }}
             />
+
+            <Tab.Screen
+                name="Create Listing"
+                component={CreateThisListing} // Attach the create a listing screen here, grab function to create a listing from CreateListing.tsx
+                options={{
+                    title: "Create",
+                    tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
+                }}
+            />
+
+            <Tab.Screen
+                name="Edit Listing"
+                component={CreateThisListing} // Attach the edit a listing screen here, grab function to edit a listing from EditListing.tsx, Placeholder screen for now 
+                options={{
+                    title: "Edit",
+                    tabBarIcon: ({ color }) => <TabBarIcon name="pencil" color={color} />,
+                }}
+            />
+
+            <Tab.Screen
+                name="Delete Listing"
+                component={CreateThisListing} // Attach the delete a listing screen here, grab function to create a listing from DeleteListing.tsx, Placeholderscreen for now 
+                options={{
+                    title: "Delete",
+                    tabBarIcon: ({ color }) => <TabBarIcon name="eraser" color={color} />,
+                }}
+            />
+
         </Tab.Navigator>
     );
 }
