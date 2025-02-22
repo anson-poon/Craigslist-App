@@ -4,7 +4,7 @@ import { createStackNavigator, CardStyleInterpolators } from "@react-navigation/
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Animated, StyleSheet, Text } from "react-native";
 import Colors from "@/constants/Colors";
-import { useColorScheme } from "@/components/useColorScheme";
+import { useColorScheme } from "react-native";
 
 import { ListingsList } from "../../screens/Browse";
 import { ListingDetails } from "../../screens/ListingDetails";
@@ -20,17 +20,19 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>["nam
 
 // Stack Navigator for Browse
 function BrowseStack() {
+    const colorScheme = useColorScheme();
+
     return (
         <Stack.Navigator
-            screenOptions={{
+            screenOptions={() => ({
                 headerShown: true,
                 headerStyle: {
-                    backgroundColor: "white",
+                    backgroundColor: colorScheme === "dark" ? "#181818" : "white",
                     shadowOpacity: 0,
                     elevation: 0,
                 },
-                headerTintColor: "black",
-            }}
+                headerTintColor: Colors[colorScheme ?? "light"].text,
+            })}
         >
             <Stack.Screen
                 name="AllListings"
@@ -64,12 +66,15 @@ export default function TabLayout() {
         <Tab.Navigator
             screenOptions={{
                 tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+                tabBarStyle: {
+                    backgroundColor: colorScheme === "dark" ? "#181818" : "white",
+                },
                 headerShown: false,
             }}
         >
             <Tab.Screen
                 name="Home"
-                component={BrowseStack} // Here the Stack Navigator is used for Browse
+                component={BrowseStack}
                 options={{
                     tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
                 }}
@@ -86,7 +91,7 @@ export default function TabLayout() {
 
             <Tab.Screen
                 name="MyListings"
-                component={Favorites} // Can be replaced with your My Listings component
+                component={Favorites} // To be replaced with My Listings component
                 options={{
                     title: "My Listings",
                     tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
@@ -95,7 +100,7 @@ export default function TabLayout() {
 
             <Tab.Screen
                 name="Settings"
-                component={Favorites} // Can be replaced with your Settings component
+                component={Favorites} // To be replaced with Settings component
                 options={{
                     title: "User",
                     tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
