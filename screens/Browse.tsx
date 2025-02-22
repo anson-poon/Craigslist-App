@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, useColorScheme } from "react-native";
 import { Listing } from "../components/ListingCard";
 import { getListingsList } from "../services/ListingsService";
 import { NavigationProp } from "@react-navigation/native";
@@ -21,6 +21,8 @@ interface ListingItem {
 */
 export function ListingsList({ navigation }: { navigation: NavigationProp<any> }) {
     const [listings, setListings] = useState<ListingItem[]>([]);
+    const colorScheme = useColorScheme() ?? "light";
+    const styles = getStyles(colorScheme);
 
     useEffect(() => {
         (async () => {
@@ -50,12 +52,17 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
     );
 }
 
-const styles = StyleSheet.create({
-    productsList: {
-        backgroundColor: "#f7f7f7",
-    },
-    productsListContainer: {
-        backgroundColor: "#f7f7f7",
-        marginHorizontal: 14,
-    },
-});
+const getStyles = (colorScheme: "light" | "dark") => {
+    const backgroundColor = { light: "#ffffff", dark: "#000000" };
+    const textColor = { light: "#000000", dark: "#ffffff" };
+
+    return StyleSheet.create({
+        productsList: {
+            backgroundColor: backgroundColor[colorScheme],
+        },
+        productsListContainer: {
+            backgroundColor: backgroundColor[colorScheme],
+            marginHorizontal: 14,
+        },
+    });
+};
