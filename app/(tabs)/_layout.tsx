@@ -121,10 +121,10 @@ export default function TabLayout() {
             />
 
             <Tab.Screen
-                name="Edit Listing"
+                name="Update Listing"
                 component={CreateThisListing} // Attach the edit a listing screen here, grab function to edit a listing from EditListing.tsx, Placeholder screen for now 
                 options={{
-                    title: "Edit",
+                    title: "Update",
                     tabBarIcon: ({ color }) => <TabBarIcon name="pencil" color={color} />,
                 }}
             />
