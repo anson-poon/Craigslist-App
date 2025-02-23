@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
-
 export function ProfileHome() {
     return (
       <View style={styles.container}>
@@ -61,5 +60,3 @@ const styles = StyleSheet.create({
     right: 20,
   },
 });
-
-export default ProfileHome;
