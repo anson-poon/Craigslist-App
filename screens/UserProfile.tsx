@@ -1,36 +1,38 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { NavigationProp } from "@react-navigation/native";
 
-export function ProfileHome() {
+/*
+    Ths displays user profile basic layout 
+*/
+export function UserProfile({ navigation }: { navigation: NavigationProp<any> }) {
     return (
-      <View style={styles.container}>
-          
-        {/* Settings Icon */}
-        <View style={styles.settingsIcon}>
-          <FontAwesome6 name="user-gear" size={24} color="black" />
-        </View>
-  
-        {/* User Profile Section */}
-        <View style={styles.titleContainer}>
-          <Text style={styles.userName}>Dog Owner One</Text>
+    <View style={styles.basicLayout}>
+
+      {/* This needs to be changed later to a READ user profile pic for dynamic changes
+      during different user login profile pics */}
+      <View style={styles.titleContainer}>
+
+        <Text style={styles.userName}>Dog Owner One</Text>
+
           <Image source={require("../assets/images/dog.jpg")} style={styles.profilePhotoImage} />
-          <Text style={styles.description}>
-            I am an example user on this platform. I have sold X amount of products, 
-            and Y amount of feedback has been given to me!
-          </Text>
 
-        </View>
+            <Text style={styles.description}>
+                    I am an example user on this platform. I have sold X amount of products, 
+                    and Y amount of feedback has been given to me!
+            </Text>
+
       </View>
-    );
-  }
 
+    </View>
+    );
+}
 const styles = StyleSheet.create({
-  container: {
+  basicLayout: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#F5F5DC",
     padding: 20,
   },
   profilePhotoImage: {
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#333",
+    color: "#263238",
   },
   description: {
     fontSize: 16,
