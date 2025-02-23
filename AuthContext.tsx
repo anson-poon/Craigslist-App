@@ -19,7 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(firebaseUser);
       setIsLoading(false);
     });
-    return stopListener();
+    return () => stopListener();
   }, []);
 
   return (
