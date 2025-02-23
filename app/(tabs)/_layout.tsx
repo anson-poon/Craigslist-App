@@ -12,6 +12,7 @@ import { Favorites } from "../../screens/Favorites";
 import { FavoritesIcon } from "../../components/FavoritesIcon";
 
 import { CreateThisListing } from "../../screens/CreateListing"; // Added this import for creating a listing 
+import ProfileHome from "@/screens/UserProfile";
 // import { EditThisListing } from "../../screens/EditListing"; // Added this import for edit a listing - placeholder
 // import { deleteThisListing } from "../../screens/DeleteListing"; // Added this import for delete a listing - placeholder
 
@@ -103,8 +104,8 @@ export default function TabLayout() {
             />
 
             <Tab.Screen
-                name="Settings"
-                component={Favorites} // To be replaced with Settings component
+                name="User Profile & Settings"
+                component={ProfileHome} // To be replaced with user profile and settings component
                 options={{
                     title: "User",
                     tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
