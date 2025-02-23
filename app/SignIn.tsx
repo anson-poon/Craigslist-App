@@ -10,12 +10,14 @@ import { useRouter } from "expo-router";
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
+import { useAuth } from "@/AuthContext";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const { setUser } = useAuth();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -25,8 +27,9 @@ export default function SignIn() {
 
     // attempt sign in with function from firebase auth sdk
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      console.log("Succesfully signed in:", auth.currentUser);
+      const userData = await signInWithEmailAndPassword(auth, email, password);
+      const user = userData.user;
+      setUser(user);
     } catch (error: unknown) {
       // error when signing in
       if (error instanceof FirebaseError) {
