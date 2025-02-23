@@ -89,7 +89,7 @@ export function CreateThisListing() {
           // Number Call - Fixes error from string price not reading correctly when displaying the listing page of the item 
           // Source URL: https://www.w3schools.com/jsref/jsref_Number.asp
           onPress={() => {
-            
+
             const numericPrice = Number(price); 
 
           // Call function from listing services - similar format for update and delete later as well 
