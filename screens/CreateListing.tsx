@@ -81,10 +81,17 @@ export function CreateThisListing() {
         </TouchableOpacity>
       </View>
 
-      {/* Create Button - Need to add validation here  */}
+  
+      {/* Create Button - Need to add more form validation here  */}
       <Button
-        title="Create This Listing"
-        onPress={() =>
+          title="Create This Listing"
+
+          // Number Call - Fixes error from string price not reading correctly when displaying the listing page of the item 
+          // Source URL: https://www.w3schools.com/jsref/jsref_Number.asp
+          onPress={() => {
+            
+            const numericPrice = Number(price); 
+
           // Call function from listing services - similar format for update and delete later as well 
           createNewListing({
             productName,
@@ -92,12 +99,14 @@ export function CreateThisListing() {
             description,
             imageUrl,
             isNew,
-            price,
+            price: numericPrice, 
             userID,
             dateCreated: Timestamp.now(),
-          })
-        }
-      />
+          });
+        }}
+
+    // Need to create auto clear forms once successfully created listing item 
+/>
 
     </View>
   );
