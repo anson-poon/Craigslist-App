@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface AuthType {
   user: User | null;
   isLoading: boolean;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const AuthContext = createContext<AuthType | undefined>(undefined);
@@ -22,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading }}>
+    <AuthContext.Provider value={{ user, isLoading, setUser }}>
       {children}
     </AuthContext.Provider>
   );
