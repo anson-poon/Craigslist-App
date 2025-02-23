@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator, CardStyleInterpolators } from "@react-navigation/stack";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Animated, StyleSheet, Text } from "react-native";
+import { Animated, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "react-native";
 
@@ -11,8 +11,12 @@ import { ListingDetails } from "../../screens/ListingDetails";
 import { Favorites } from "../../screens/Favorites";
 import { FavoritesIcon } from "../../components/FavoritesIcon";
 
+// UserProfile UI to UserProfileSettings UI
+import { UserProfile } from "../../screens/UserProfile";
+import { UserProfileSettings } from "../../screens/UserProfileSettings";
+
 import { CreateThisListing } from "../../screens/CreateListing"; // Added this import for creating a listing 
-import ProfileHome from "@/screens/UserProfile";
+
 // import { EditThisListing } from "../../screens/EditListing"; // Added this import for edit a listing - placeholder
 // import { deleteThisListing } from "../../screens/DeleteListing"; // Added this import for delete a listing - placeholder
 
@@ -22,6 +26,8 @@ const Tab = createBottomTabNavigator();
 function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>["name"]; color: string }) {
     return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
+
+
 
 // Stack Navigator for Browse
 function BrowseStack() {
@@ -57,6 +63,41 @@ function BrowseStack() {
                     cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
                     gestureEnabled: true,
                     gestureDirection: "horizontal",
+                }}
+            />
+
+        </Stack.Navigator>
+    );
+}
+
+// Stack Navigator for UserProfile and UserProfileSettings 
+function UserProfileStack() {
+
+    return (
+        <Stack.Navigator>
+
+            {/* UserProfile.tsx screen */}
+            <Stack.Screen
+                name="UserProfile"
+                component={UserProfile}
+                options={({ navigation }) => ({
+                    title: "User Profile Home",
+                    headerTitleStyle: styles.headerTitle,
+                    headerRight: () => (
+                        <TouchableOpacity style={styles.settingsIcon} onPress={() => navigation.navigate("UserProfileSettings")}>
+                            <FontAwesome name="cog" size={24} color="black" />
+                        </TouchableOpacity>
+                    ),
+                })}
+            />
+
+            {/* UserProfileSettings.tsx screen*/}
+            <Stack.Screen
+                name="UserProfileSettings"
+                component={UserProfileSettings}
+                options={{
+                    title: "Change User Profile Settings",
+                    headerTitleStyle: styles.headerTitle,
                 }}
             />
         </Stack.Navigator>
@@ -104,8 +145,8 @@ export default function TabLayout() {
             />
 
             <Tab.Screen
-                name="User Profile & Settings"
-                component={ProfileHome} // To be replaced with user profile and settings component
+                name="User Profile and User Profile Settings"
+                component={UserProfileStack} 
                 options={{
                     title: "User",
                     tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
@@ -114,28 +155,10 @@ export default function TabLayout() {
 
             <Tab.Screen
                 name="Create Listing"
-                component={CreateThisListing} // Attach the create a listing screen here, grab function to create a listing from CreateListing.tsx
+                component={CreateThisListing}
                 options={{
                     title: "Create",
                     tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
-                }}
-            />
-
-            <Tab.Screen
-                name="Update Listing"
-                component={CreateThisListing} // Attach the edit a listing screen here, grab function to edit a listing from EditListing.tsx, Placeholder screen for now 
-                options={{
-                    title: "Update",
-                    tabBarIcon: ({ color }) => <TabBarIcon name="pencil" color={color} />,
-                }}
-            />
-
-            <Tab.Screen
-                name="Delete Listing"
-                component={CreateThisListing} // Attach the delete a listing screen here, grab function to create a listing from DeleteListing.tsx, Placeholderscreen for now 
-                options={{
-                    title: "Delete",
-                    tabBarIcon: ({ color }) => <TabBarIcon name="eraser" color={color} />,
                 }}
             />
 
@@ -146,5 +169,8 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 20,
+    },
+    settingsIcon: {
+        marginRight: 10,
     },
 });
