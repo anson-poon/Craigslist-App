@@ -1,100 +1,179 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Text, Image, View, ScrollView, SafeAreaView, Button, StyleSheet } from "react-native";
-import { getListingByID } from "../services/ListingsService.js";
+import { Image, ScrollView, SafeAreaView, StyleSheet, TouchableOpacity } from "react-native";
+import Animated, { FadeIn, useSharedValue } from "react-native-reanimated";
+import moment from "moment";
+import { getListingByID } from "../services/ListingsService";
 import { FavoriteContext } from "../FavoriteContext";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useColorScheme } from "react-native";
+import { Text, View } from "@/components/Themed";
 
-type ListingDetailsProps = {
-    route: RouteProp<{ ListingDetails: { listingId: string } }, "ListingDetails">;
-};
+/*
+    The ListingDetails component show the details of a listing in a dedicated screen.
+    It also allows the user to add the listing to their favorites.
+*/
+export function ListingDetails() {
+    const { listingId } = useRoute<RouteProp<{ ListingDetails: { listingId: string } }, "ListingDetails">>().params;
+    const { addItemToFavorite } = useContext(FavoriteContext);
+    const navigation = useNavigation();
 
-export function ListingDetails({ route }: ListingDetailsProps) {
-    const { listingId } = route.params;
-    const [Listing, setListing] = useState<{
+    const colorScheme = useColorScheme();
+    const styles = getStyles(colorScheme ?? "light");
+
+    // Listing
+    const [listing, setListing] = useState<null | {
         id: string;
-        image: any;
-        name: string;
+        productName: string;
+        imageUrl: string;
         price: number;
         description: string;
-    } | null>(null);
-
-    const { addItemToFavorite } = useContext(FavoriteContext);
+        category: string;
+        isNew: boolean;
+        userID: string;
+        dateCreated: Date | null;
+    }>(null);
 
     useEffect(() => {
-        async function fetchListing() {
-            const fetchedListing = await getListingByID(listingId); // Make sure to await the promise
-            if (fetchedListing) {
-                setListing({
-                    id: fetchedListing.id,
-                    image: fetchedListing.imageUrl,
-                    name: fetchedListing.productName,
-                    price: fetchedListing.price,
-                    description: fetchedListing.description,
-                });
+        async function fetchListingData() {
+            try {
+                const fetchedListing = await getListingByID(listingId);
+                if (fetchedListing) {
+                    setListing(fetchedListing);
+                }
+            } catch (error) {
+                console.error("Error fetching listing data:", error);
             }
         }
-        fetchListing();
+
+        fetchListingData();
     }, [listingId]);
 
-    function onAddToFavorite() {
-        if (Listing) {
-            addItemToFavorite(Listing.id);
+    // Favorite
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    const onAddToFavorite = () => {
+        setIsFavorite(!isFavorite);
+        if (!isFavorite) {
+            addItemToFavorite(listing?.id || "");
         }
-    }
+    };
+
+    // Days calculation
+    const daysAgo = listing && listing.dateCreated ? moment().diff(moment(listing.dateCreated), "days") : 0;
 
     return (
-        <SafeAreaView>
-            <ScrollView>
-                {Listing && (
-                    <>
-                        <Image style={styles.image} source={Listing.image} />
-                        <View style={styles.infoContainer}>
-                            <Text style={styles.name}>{Listing.name}</Text>
-                            <Text style={styles.price}>$ {Listing.price}</Text>
-                            <Text style={styles.description}>{Listing.description}</Text>
-                            <Button onPress={onAddToFavorite} title="Add to favorite" />
-                        </View>
-                    </>
+        <SafeAreaView style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+                {listing && (
+                    <View style={styles.mainContent}>
+                        {/* Image */}
+                        <Animated.View entering={FadeIn.duration(400)}>
+                            <Image style={styles.image} source={{ uri: listing.imageUrl }} />
+                        </Animated.View>
+
+                        {/* Add to Favorite */}
+                        <TouchableOpacity
+                            style={[styles.addToFavorite, { backgroundColor: isFavorite ? "purple" : "gray" }]}
+                            onPress={onAddToFavorite}
+                        >
+                            <Icon name="heart" size={25} color="white" style={{ marginTop: 2 }} />
+                        </TouchableOpacity>
+
+                        {/* Product Info */}
+                        <Animated.View entering={FadeIn.duration(300)}>
+                            <View style={styles.infoContainer}>
+                                <Text style={styles.name}>{listing.productName}</Text>
+                                <Text style={styles.price}>${listing.price.toFixed(2)}</Text>
+                                <Text style={styles.category}>Category: {listing.category}</Text>
+                                <Text style={styles.date}>
+                                    Listed on:{" "}
+                                    {listing.dateCreated ? moment(listing.dateCreated).format("MMM D, YYYY") : "N/A"} (
+                                    {daysAgo} {daysAgo === 1 ? "day" : "days"} ago)
+                                </Text>
+
+                                <Text style={styles.description}>Condition: {listing.isNew ? "New" : "Used"}</Text>
+                                <Text style={styles.description}>{listing.description}</Text>
+                            </View>
+                        </Animated.View>
+                    </View>
                 )}
             </ScrollView>
         </SafeAreaView>
     );
 }
 
-const styles = StyleSheet.create({
-    card: {
-        backgroundColor: "white",
-        borderRadius: 16,
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        shadowColor: "black",
-        shadowOffset: {
-            height: 0,
-            width: 0,
+const getStyles = (colorScheme: "dark" | "light") => {
+    const backgroundColor = { light: "#ffffff", dark: "#000000" };
+    const textColor = { light: "#000000", dark: "#ffffff" };
+
+    return StyleSheet.create({
+        container: {
+            flex: 1,
+            backgroundColor: backgroundColor[colorScheme],
         },
-        elevation: 1,
-        marginVertical: 20,
-    },
-    image: {
-        height: 300,
-        width: "100%",
-    },
-    infoContainer: {
-        padding: 16,
-    },
-    name: {
-        fontSize: 22,
-        fontWeight: "bold",
-    },
-    price: {
-        fontSize: 16,
-        fontWeight: "600",
-        marginBottom: 8,
-    },
-    description: {
-        fontSize: 16,
-        fontWeight: "400",
-        color: "#787878",
-        marginBottom: 16,
-    },
-});
+        scrollContainer: {
+            paddingBottom: 20,
+            alignItems: "center",
+        },
+        mainContent: {
+            width: "100%",
+            backgroundColor: backgroundColor[colorScheme],
+        },
+        image: {
+            height: 300,
+            width: "100%",
+        },
+        infoContainer: {
+            padding: 16,
+            alignItems: "flex-start",
+            width: "100%",
+            backgroundColor: backgroundColor[colorScheme],
+        },
+        name: {
+            fontSize: 24,
+            fontWeight: "bold",
+            marginBottom: 8,
+            color: textColor[colorScheme],
+        },
+        rowContainer: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 16,
+        },
+        price: {
+            fontSize: 20,
+            fontWeight: "600",
+            marginBottom: 10,
+            color: textColor[colorScheme],
+        },
+        category: {
+            fontSize: 16,
+            marginBottom: 8,
+            color: colorScheme === "dark" ? "darkgray" : "#555",
+        },
+        date: {
+            fontSize: 14,
+            marginBottom: 8,
+            color: colorScheme === "dark" ? "darkgray" : "#777",
+        },
+        description: {
+            fontSize: 16,
+            marginBottom: 8,
+            color: textColor[colorScheme],
+        },
+        addToFavorite: {
+            position: "absolute",
+            justifyContent: "center",
+            alignItems: "center",
+            top: 20,
+            right: 20,
+            width: 50,
+            height: 50,
+            backgroundColor: "orange",
+            borderRadius: 30,
+            zIndex: 1,
+        },
+    });
+};

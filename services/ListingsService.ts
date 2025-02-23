@@ -1,7 +1,6 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, serverTimestamp } from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
-
+import { doc, getDoc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 /*
   ListingService is a collection of functions that interact with the Firestore database
 */
@@ -21,6 +20,62 @@ const formatListing = (doc: any) => {
     dateCreated: data.dateCreated ? data.dateCreated.toDate() : null,
   };
 };
+
+/*
+Creates a New Listing
+  Source URL: https://firebase.google.com/docs/firestore/manage-data/add-data
+  Timestamps Source URL: https://firebase.google.com/docs/reference/kotlin/com/google/firebase/Timestamp
+*/
+export async function createNewListing(listingSpecs: any) {
+  try {
+    const newlyCreatedListing = await addDoc(collection(FIREBASE_DB, "listings"), {
+      productName: listingSpecs.productName,
+      category: listingSpecs.category,
+      description: listingSpecs.description,
+      imageUrl: listingSpecs.imageUrl,
+      isNew: listingSpecs.isNew,
+      price: listingSpecs.price,
+      userID: listingSpecs.userID,
+      dateCreated: new Date(),
+    });
+
+    console.log("This item's listing ID is:", newlyCreatedListing.id);
+    return newlyCreatedListing.id;
+
+  } catch (error) {
+    console.error("Issues created with your listing, please check again!", error);
+    return null;
+  }
+}
+
+/*
+  Delete an Existing Listing
+  Source URL: https://firebase.google.com/docs/firestore/manage-data/delete-data
+*/
+export async function deleteExistingListing(id: string) {
+  try {
+    await deleteDoc(doc(FIREBASE_DB, "listings", id));
+    console.log("Deleted this listing:", id);
+
+  } catch (error) {
+    console.error("This listing does not exist!!", error);
+  }
+}
+
+
+/*
+  Update an Existing Listing 
+  Source URL: https://firebase.google.com/docs/firestore/manage-data/add-data
+*/
+export async function updateExistingListing(id: string, updateThese: any) {
+  try {
+    await updateDoc(doc(FIREBASE_DB, "listings", id), updateThese);
+    console.log(`Successfully updated listing id number ${id} and its data fields of`, updateThese);
+
+  } catch (error) {
+    console.error("This listing does not exist!!", error);
+  }
+}
 
 /*
   Retrieves a list of all listings
