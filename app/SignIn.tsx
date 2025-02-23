@@ -29,7 +29,10 @@ export default function SignIn() {
     try {
       const userData = await signInWithEmailAndPassword(auth, email, password);
       const user = userData.user;
+      console.log(userData);
       setUser(user);
+      // TODO: Route to browse screen
+      // router.replace();
     } catch (error: unknown) {
       // error when signing in
       if (error instanceof FirebaseError) {

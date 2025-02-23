@@ -39,7 +39,10 @@ export default function SignUp() {
         password
       );
       const user = userData.user;
+      console.log(userData);
       setUser(user);
+      // TODO: Route to browse screen
+      // router.replace();
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.message);
