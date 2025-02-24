@@ -9,6 +9,7 @@ import { useColorScheme } from "react-native";
 import { ListingsList } from "../../screens/Browse";
 import { ListingDetails } from "../../screens/ListingDetails";
 import { Favorites } from "../../screens/Favorites";
+import { UploadImage } from "../../screens/UploadImage";
 import { FavoritesIcon } from "../../components/FavoritesIcon";
 
 const Stack = createStackNavigator();
@@ -104,6 +105,15 @@ export default function TabLayout() {
                 options={{
                     title: "User",
                     tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+                }}
+            />
+
+            <Tab.Screen
+                name="UploadImage"
+                component={UploadImage} // To be replaced with More component
+                options={{
+                    title: "Upload Image",
+                    tabBarIcon: ({ color }) => <TabBarIcon name="image" color={color} />,
                 }}
             />
         </Tab.Navigator>
