@@ -2,10 +2,16 @@ import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 
+// Neccessary for this page and the settings page later for auth use 
+import { useAuth } from "@/AuthContext"; 
+
 /*
     Ths displays user profile basic layout 
 */
 export function UserProfile({ navigation }: { navigation: NavigationProp<any> }) {
+
+    const { user } = useAuth(); 
+
     return (
     <View style={styles.basicLayout}>
 
@@ -13,7 +19,10 @@ export function UserProfile({ navigation }: { navigation: NavigationProp<any> })
       during different user login profile pics */}
       <View style={styles.titleContainer}>
 
-        <Text style={styles.userName}>Dog Owner One</Text>
+        {/* Display Username with Auth Dynamically  */} 
+        <Text style={styles.userName}>
+          {user?.displayName || "User Not Found"}
+        </Text>
 
           <Image source={require("../assets/images/dog.jpg")} style={styles.profilePhotoImage} />
 
