@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 
+import { updateExistingUser } from "@/services/UsersService";
+
 export function UserProfileSettings() {
+
   // Mandatory Fields
   const [email, setEmail] = useState("");
   const [firstname, setFirstName] = useState("");
@@ -11,8 +14,8 @@ export function UserProfileSettings() {
 
   // Optional Fields
   const [description, setDescription] = useState("");
-  // const [profilePhoto, setProfilePhoto] = useState("null");
-
+  // const [profilePicture, setProfilePicture] = useState("null");
+  
   return (
     <View style={styles.basicLayout}>
       <Text style={styles.pageLabel}>User Settings</Text>
@@ -80,6 +83,7 @@ const styles = StyleSheet.create({
     alignItems: "center", 
     padding: 5, 
     width: "100%",
+    backgroundColor: "#F5F5DC",
   },
   pageLabel: { 
     fontSize: 20, 
