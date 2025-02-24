@@ -1,6 +1,9 @@
-import { collection, getDocs, serverTimestamp } from "firebase/firestore";
+import { collection, getDocs, query, orderBy} from "firebase/firestore";
 import { FIREBASE_DB } from "../firebaseConfig";
 import { doc, getDoc, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
+
+
 /*
   ListingService is a collection of functions that interact with the Firestore database
 */
@@ -28,6 +31,8 @@ Creates a New Listing
 */
 export async function createNewListing(listingSpecs: any) {
   try {
+
+    /* Must turn on Firestore => Rules =>  allow write: if true; */
     const newlyCreatedListing = await addDoc(collection(FIREBASE_DB, "listings"), {
       productName: listingSpecs.productName,
       category: listingSpecs.category,
@@ -36,7 +41,7 @@ export async function createNewListing(listingSpecs: any) {
       isNew: listingSpecs.isNew,
       price: listingSpecs.price,
       userID: listingSpecs.userID,
-      dateCreated: new Date(),
+      dateCreated: Timestamp.now()
     });
 
     console.log("This item's listing ID is:", newlyCreatedListing.id);
@@ -135,5 +140,91 @@ export async function getListingByName(name: string) {
   } catch (error) {
     console.error(`Error fetching listing with name containing "${name}":`, error);
     return null;
+  }
+
+}
+
+/*
+  Sort by Newest 
+  Source URL: https://firebase.google.com/docs/firestore/query-data/order-limit-data
+  Source URL: https://firebase.google.com/docs/firestore/query-data/get-data
+*/
+
+export async function getListingsListSortedByNewest() {
+  try {
+    const listingsCol = collection(FIREBASE_DB, "listings"); 
+
+    // Specified query 
+    const thisQuery = query(listingsCol, orderBy("dateCreated", "desc")); 
+
+    const listingsSnapshot = await getDocs(thisQuery);
+    return listingsSnapshot.docs.map(formatListing);
+
+  } catch (error) {
+    console.error("Error fetching sorted listings:", error);
+    return [];
+  }
+}
+
+/*
+  Sort by Oldest
+  Source URL: https://firebase.google.com/docs/firestore/query-data/order-limit-data
+  Source URL: https://firebase.google.com/docs/firestore/query-data/get-data
+*/
+export async function getListingsListSortedByOldest() {
+  try {
+    const listingsCol = collection(FIREBASE_DB, "listings"); 
+
+    // Specified query 
+    const thisQuery = query(listingsCol, orderBy("dateCreated", "asc")); 
+
+    const listingsSnapshot = await getDocs(thisQuery);
+    return listingsSnapshot.docs.map(formatListing);
+
+  } catch (error) {
+    console.error("Error fetching sorted listings:", error);
+    return [];
+  }
+}
+
+/*
+  Sort by Expensive
+  Source URL: https://firebase.google.com/docs/firestore/query-data/order-limit-data
+  Source URL: https://firebase.google.com/docs/firestore/query-data/get-data
+*/
+export async function getListingsListSortedByExpensive() {
+  try {
+    const listingsCol = collection(FIREBASE_DB, "listings"); 
+
+    // Specified query
+    const thisQuery = query(listingsCol, orderBy("price", "desc")); 
+
+    const listingsSnapshot = await getDocs(thisQuery);
+    return listingsSnapshot.docs.map(formatListing);
+
+  } catch (error) {
+    console.error("Error fetching sorted listings:", error);
+    return [];
+  }
+}
+
+/*
+  Sort by Cheapest
+  Source URL: https://firebase.google.com/docs/firestore/query-data/order-limit-data
+  Source URL: https://firebase.google.com/docs/firestore/query-data/get-data
+*/
+export async function getListingsListSortedByCheapest() {
+  try {
+    const listingsCol = collection(FIREBASE_DB, "listings"); 
+
+    // Specified query
+    const thisQuery = query(listingsCol, orderBy("price", "asc")); 
+
+    const listingsSnapshot = await getDocs(thisQuery);
+    return listingsSnapshot.docs.map(formatListing);
+
+  } catch (error) {
+    console.error("Error fetching sorted listings:", error);
+    return [];
   }
 }
