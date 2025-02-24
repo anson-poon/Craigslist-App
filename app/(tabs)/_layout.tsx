@@ -85,7 +85,7 @@ function UserProfileStack() {
                     headerTitleStyle: styles.headerTitle,
                     headerRight: () => (
                         <TouchableOpacity style={styles.settingsIcon} onPress={() => navigation.navigate("UserProfileSettings")}>
-                            <FontAwesome name="cog" size={24} color="black" />
+                            <FontAwesome name="cog" size={24} color="white" />
                         </TouchableOpacity>
                     ),
                 })}
@@ -96,7 +96,7 @@ function UserProfileStack() {
                 name="UserProfileSettings"
                 component={UserProfileSettings}
                 options={{
-                    title: "Change User Profile Settings",
+                    title: "Change Profile Settings",
                     headerTitleStyle: styles.headerTitle,
                 }}
             />
