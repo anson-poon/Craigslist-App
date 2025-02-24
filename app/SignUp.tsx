@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import { FirebaseError } from "firebase/app";
 import { useAuth } from "@/AuthContext";
@@ -39,8 +39,19 @@ export default function SignUp() {
         password
       );
       const user = userData.user;
+
+
+      // User management with Auth 
+      // Source URL Auth properties use: https://firebase.google.com/docs/auth/web/manage-users
+      await updateProfile(user, { displayName: username });
+
+      const usernameUpdate = auth.currentUser; 
+
+      setUser(usernameUpdate)
+    
       console.log(userData);
       setUser(user);
+      
       // TODO: Route to browse screen
       // router.replace();
     } catch (error) {
