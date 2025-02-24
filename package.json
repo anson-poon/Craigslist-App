@@ -5,18 +5,20 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "start-backend": "cd s3-upload-backend && npm start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "dev": "concurrently \"npm run start-backend\" \"npm start\""
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.4",
-    "@react-native-firebase/app":"21.11.0",
-    "@react-native-firebase/auth":"21.11.0",
+    "@react-native-firebase/app": "21.11.0",
+    "@react-native-firebase/auth": "21.11.0",
     "@react-native-firebase/crashlytics": "21.11.0",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
@@ -49,6 +51,7 @@
     "@babel/core": "^7.25.2",
     "@types/react": "~18.3.12",
     "@types/react-native-vector-icons": "^6.4.18",
+    "concurrently": "^9.1.2",
     "jest": "^29.2.1",
     "jest-expo": "~52.0.3",
     "react-test-renderer": "18.3.1",
