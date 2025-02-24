@@ -10,6 +10,7 @@ import { useRouter } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import { FirebaseError } from "firebase/app";
+import { useAuth } from "@/AuthContext";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -18,6 +19,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const { setUser } = useAuth();
 
   const handleSignUp = async () => {
     if (!email || !username || !password || !confirmPassword) {
@@ -31,8 +33,16 @@ export default function SignUp() {
 
     // attempt sign up with function from firebase auth sdk
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      console.log("User signed up:", auth.currentUser);
+      const userData = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userData.user;
+      console.log(userData);
+      setUser(user);
+      // TODO: Route to browse screen
+      // router.replace();
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.message);
