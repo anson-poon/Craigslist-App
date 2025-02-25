@@ -11,6 +11,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import { FirebaseError } from "firebase/app";
 import { useAuth } from "@/AuthContext";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { FIREBASE_DB } from "@/firebaseConfig";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -41,8 +43,18 @@ export default function SignUp() {
       const user = userData.user;
       console.log(userData);
       setUser(user);
-      // TODO: Route to browse screen
-      // router.replace();
+
+      // Create user document in Firestore
+      await setDoc(doc(FIREBASE_DB, "users", user.uid), {
+        uid: user.uid,
+        email: user.email,
+        username: username,
+        createdAt: serverTimestamp(),
+      });
+      console.log(
+        "User document successfully created in Firestore for UID:",
+        user.uid
+      );
     } catch (error) {
       if (error instanceof FirebaseError) {
         setError(error.message);
