@@ -21,6 +21,7 @@ const formatListing = (doc: any) => {
     isNew: data.isNew,
     userID: data.userID,
     dateCreated: data.dateCreated ? data.dateCreated.toDate() : null,
+    tags: data.tags || []
   };
 };
 
@@ -41,7 +42,8 @@ export async function createNewListing(listingSpecs: any) {
       isNew: listingSpecs.isNew,
       price: listingSpecs.price,
       userID: listingSpecs.userID,
-      dateCreated: Timestamp.now()
+      dateCreated: Timestamp.now(),
+      tags: listingSpecs.tags || []
     });
 
     console.log("This item's listing ID is:", newlyCreatedListing.id);
