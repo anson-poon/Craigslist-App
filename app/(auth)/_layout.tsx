@@ -6,8 +6,8 @@ const AuthLayout: FC = () => {
     <Stack screenOptions={{ headerShown: false }}>
       {/* Public Routes */}
       <Stack.Screen name="index" options={{ title: "Welcome" }} />
-      <Stack.Screen name="signIn" options={{ title: "Sign In" }} />
-      <Stack.Screen name="signUp" options={{ title: "Sign Up" }} />
+      <Stack.Screen name="SignIn" options={{ title: "Sign In" }} />
+      <Stack.Screen name="SignUp" options={{ title: "Sign Up" }} />
     </Stack>
   );
 };
