@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { auth } from "../firebaseConfig";
+import { auth } from "../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { useAuth } from "@/AuthContext";
@@ -28,9 +28,9 @@ export default function SignIn() {
     // attempt sign in with function from firebase auth sdk
     try {
       const userData = await signInWithEmailAndPassword(auth, email, password);
-      const user = userData.user;
-      console.log(userData);
-      setUser(user);
+      // const user = userData.user;
+      // console.log(userData);
+      // setUser(user);
       // TODO: Route to browse screen
       // router.replace();
     } catch (error: unknown) {

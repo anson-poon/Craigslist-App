@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { auth } from "@/firebaseConfig";
 import { FirebaseError } from "firebase/app";
 import { useAuth } from "@/AuthContext";
 
