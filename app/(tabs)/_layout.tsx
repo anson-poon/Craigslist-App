@@ -9,6 +9,7 @@ import { useColorScheme } from "react-native";
 import { ListingsList } from "../../screens/Browse";
 import { ListingDetails } from "../../screens/ListingDetails";
 import { Favorites } from "../../screens/Favorites";
+import { UploadImage } from "../../screens/UploadImage";
 import { FavoritesIcon } from "../../components/FavoritesIcon";
 
 // UserProfile UI to UserProfileSettings UI
@@ -161,7 +162,15 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
                 }}
             />
-
+        
+            <Tab.Screen
+                name="UploadImage"
+                component={UploadImage} // To be replaced with More component
+                options={{
+                    title: "Upload Image",
+                    tabBarIcon: ({ color }) => <TabBarIcon name="image" color={color} />,
+                }}
+            />
         </Tab.Navigator>
     );
 }

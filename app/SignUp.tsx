@@ -39,8 +39,6 @@ export default function SignUp() {
         password
       );
       const user = userData.user;
-
-
       // User management with Auth 
       // Source URL Auth properties use: https://firebase.google.com/docs/auth/web/manage-users
       await updateProfile(user, { displayName: username });
