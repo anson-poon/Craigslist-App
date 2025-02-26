@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, useColorScheme } from "react-native";
+import { View, Text, FlatList, RefreshControl, StyleSheet, useColorScheme } from "react-native";
 import { Listing } from "../components/ListingCard";
 import { getListingsList } from "../services/ListingsService";
 import { NavigationProp } from "@react-navigation/native";
@@ -21,6 +21,7 @@ interface ListingItem {
 */
 export function ListingsList({ navigation }: { navigation: NavigationProp<any> }) {
     const [listings, setListings] = useState<ListingItem[]>([]);
+    const [refreshing, setRefreshing] = useState(false);
     const colorScheme = useColorScheme() ?? "light";
     const styles = getStyles(colorScheme);
 
@@ -29,6 +30,15 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
             setListings(await getListingsList());
         })();
     }, []);
+
+    // Refresh control for pull-to-refresh functionality
+    const onRefresh = () => {
+        setRefreshing(true);
+        setTimeout(async () => {
+            setListings(await getListingsList());
+            setRefreshing(false);
+        }, 2000);
+    };
 
     return (
         <FlatList
@@ -48,6 +58,14 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
                     onPress={() => navigation.navigate("ListingDetails", { listingId: item.id })}
                 />
             )}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    colors={["grey"]}
+                    progressBackgroundColor={"black"}
+                />
+            }
         />
     );
 }
