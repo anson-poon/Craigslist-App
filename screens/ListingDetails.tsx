@@ -16,8 +16,6 @@ import { Text, View } from "@/components/Themed";
 export function ListingDetails() {
     const { listingId } = useRoute<RouteProp<{ ListingDetails: { listingId: string } }, "ListingDetails">>().params;
     const { addItemToFavorite } = useContext(FavoriteContext);
-    const navigation = useNavigation();
-
     const colorScheme = useColorScheme();
     const styles = getStyles(colorScheme ?? "light");
 
@@ -32,6 +30,7 @@ export function ListingDetails() {
         isNew: boolean;
         userID: string;
         dateCreated: Date | null;
+        tags: string[]; 
     }>(null);
 
     useEffect(() => {
@@ -94,6 +93,8 @@ export function ListingDetails() {
 
                                 <Text style={styles.description}>Condition: {listing.isNew ? "New" : "Used"}</Text>
                                 <Text style={styles.description}>{listing.description}</Text>
+                                <Text style={styles.description}>{listing.tags.join(", ")}</Text>
+
                             </View>
                         </Animated.View>
                     </View>
