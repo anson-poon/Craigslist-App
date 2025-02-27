@@ -22,6 +22,15 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const router = useRouter();
   const { setUser } = useAuth();
+  // use an object to map firebase error codes to user friendly err msgs
+  const firebaseErrors: Record<string, string> = {
+    "auth/email-already-in-use":
+      "This email is already registered. Try again, or sign in.",
+    "auth/wrong-password": "Invalid credentials, try again.",
+    "auth/user-not-found": "No account found with this email, try again.",
+    "auth/invalid-credential": "Invalid credentials, try again.",
+    "auth/invalid-email": "Please enter a valid email address.",
+  };
 
   const handleSignUp = async () => {
     if (!email || !username || !password || !confirmPassword) {
@@ -41,7 +50,6 @@ export default function SignUp() {
         password
       );
       const user = userData.user;
-      console.log(userData);
       setUser(user);
 
       // Create user document in Firestore
@@ -57,7 +65,10 @@ export default function SignUp() {
       );
     } catch (error) {
       if (error instanceof FirebaseError) {
-        setError(error.message);
+        const errorMsg =
+          firebaseErrors[error.code] || "Unknown error encountered.";
+        setError(errorMsg);
+        console.log(error.code);
       } else {
         setError("Unknown error encountered.");
       }

@@ -61,11 +61,12 @@ function ThemedLayout() {
     }
   }, [user, isLoading]);
 
-  if (isLoading) return null; // Show a loading spinner here if desired
+  if (isLoading) return null;
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Slot /> {/* This will render child routes */}
+      {/* render children */}
+      <Slot />
     </ThemeProvider>
   );
 }
