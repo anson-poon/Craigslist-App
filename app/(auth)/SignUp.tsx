@@ -63,6 +63,17 @@ export default function SignUp() {
         "User document successfully created in Firestore for UID:",
         user.uid
       );
+
+      // User management with Auth
+      // Source URL Auth properties use: https://firebase.google.com/docs/auth/web/manage-users
+      //await updateProfile(user, { displayName: username });
+
+      //const usernameUpdate = auth.currentUser;
+
+      //setUser(usernameUpdate)
+
+      //console.log(userData);
+      //setUser(user);
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorMsg =
