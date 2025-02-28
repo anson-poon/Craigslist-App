@@ -8,17 +8,24 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { auth } from "../firebaseConfig";
+import { auth } from "../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
-import { useAuth } from "@/AuthContext";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-  const { setUser } = useAuth();
+  // use an object to map firebase error codes to user friendly err msgs
+  const firebaseErrors: Record<string, string> = {
+    "auth/invalid-email": "Please enter a valid email address.",
+    "auth/email-already-in-use":
+      "This email is already registered. Try again, or sign in.",
+    "auth/wrong-password": "Invalid credentials, try again.",
+    "auth/user-not-found": "No account found with this email, try again.",
+    "auth/invalid-credential": "Invalid credentials, try again.",
+  };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -26,18 +33,17 @@ export default function SignIn() {
       return;
     }
 
-    // attempt sign in with function from firebase auth sdk
+    //  attempt sign in with function from firebase auth sdk
     try {
       const userData = await signInWithEmailAndPassword(auth, email, password);
-      const user = userData.user;
-      console.log(userData);
-      setUser(user);
-      // TODO: Route to browse screen
-      // router.replace();
     } catch (error: unknown) {
       // error when signing in
       if (error instanceof FirebaseError) {
-        setError(error.message);
+        // use firebaseerrors object to get user friendly err msg
+        const errorMsg =
+          firebaseErrors[error.code] || "Unknown error encountered.";
+        setError(errorMsg);
+        console.log(error.code);
       } else {
         setError("Unknown error encountered.");
       }

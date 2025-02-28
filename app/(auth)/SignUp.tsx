@@ -7,10 +7,12 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebaseConfig";
 import { FirebaseError } from "firebase/app";
 import { useAuth } from "@/AuthContext";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { FIREBASE_DB } from "@/firebaseConfig";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -20,6 +22,15 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const router = useRouter();
   const { setUser } = useAuth();
+  // use an object to map firebase error codes to user friendly err msgs
+  const firebaseErrors: Record<string, string> = {
+    "auth/email-already-in-use":
+      "This email is already registered. Try again, or sign in.",
+    "auth/wrong-password": "Invalid credentials, try again.",
+    "auth/user-not-found": "No account found with this email, try again.",
+    "auth/invalid-credential": "Invalid credentials, try again.",
+    "auth/invalid-email": "Please enter a valid email address.",
+  };
 
   const handleSignUp = async () => {
     if (!email || !username || !password || !confirmPassword) {
@@ -39,22 +50,36 @@ export default function SignUp() {
         password
       );
       const user = userData.user;
-      // User management with Auth 
-      // Source URL Auth properties use: https://firebase.google.com/docs/auth/web/manage-users
-      await updateProfile(user, { displayName: username });
-
-      const usernameUpdate = auth.currentUser; 
-
-      setUser(usernameUpdate)
-    
-      console.log(userData);
       setUser(user);
-      
-      // TODO: Route to browse screen
-      // router.replace();
+
+      // Create user document in Firestore
+      await setDoc(doc(FIREBASE_DB, "users", user.uid), {
+        uid: user.uid,
+        email: user.email,
+        username: username,
+        createdAt: serverTimestamp(),
+      });
+      console.log(
+        "User document successfully created in Firestore for UID:",
+        user.uid
+      );
+
+      // User management with Auth
+      // Source URL Auth properties use: https://firebase.google.com/docs/auth/web/manage-users
+      //await updateProfile(user, { displayName: username });
+
+      //const usernameUpdate = auth.currentUser;
+
+      //setUser(usernameUpdate)
+
+      //console.log(userData);
+      //setUser(user);
     } catch (error) {
       if (error instanceof FirebaseError) {
-        setError(error.message);
+        const errorMsg =
+          firebaseErrors[error.code] || "Unknown error encountered.";
+        setError(errorMsg);
+        console.log(error.code);
       } else {
         setError("Unknown error encountered.");
       }
