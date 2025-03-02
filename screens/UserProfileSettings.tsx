@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 
-import { updateExistingUser } from "@/services/UsersService";
+import { updateExistingUser } from "@/services/UserServices";
 
 export function UserProfileSettings() {
 
