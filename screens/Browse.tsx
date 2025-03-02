@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, RefreshControl, StyleSheet, useColorScheme } from "react-native";
+import { View, Text, FlatList, RefreshControl, StyleSheet, useColorScheme, TouchableOpacity } from "react-native";
 import { Listing } from "../components/ListingCard";
 import { getListingsList } from "../services/ListingsService";
 import { NavigationProp } from "@react-navigation/native";
+
+// Source URL: https://callstack.github.io/react-native-paper/docs/components/Menu/
+import { Menu, Divider, PaperProvider } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialIcons";
+
+
 
 interface ListingItem {
     id: string;
@@ -25,6 +31,11 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
     const colorScheme = useColorScheme() ?? "light";
     const styles = getStyles(colorScheme);
 
+    // Flag when dropdown clicked 
+    const [sortClicked, setSortClicked] = useState(false);
+    const [filterClicked, setFilterClicked] = useState(false);
+
+
     useEffect(() => {
         (async () => {
             setListings(await getListingsList());
@@ -41,6 +52,45 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
     };
 
     return (
+
+        <PaperProvider>
+        <View>
+            <View style={styles.sortLayout}>
+                <Menu
+                    visible={sortClicked}
+                    onDismiss={() => setSortClicked(false)}
+                    
+                    anchor={
+                        <TouchableOpacity style={styles.sortButton} onPress={() => setSortClicked(true)}>
+                            <Icon name="unfold-more" size={30} color="black" />
+                            <Text>Sort</Text>
+                        </TouchableOpacity>
+                    }
+                >
+                    <Menu.Item onPress={() => console.log("expensive")} title="Expensive" />
+                    <Menu.Item onPress={() => console.log("cheapest")} title="Cheapest" />
+                    <Menu.Item onPress={() => console.log("recent")} title="Recent" />
+                    <Menu.Item onPress={() => console.log("oldest")} title="Oldest" />
+                    <Divider />
+                </Menu>
+
+                <Menu
+                    visible={filterClicked}
+                    onDismiss={() => setFilterClicked(false)}
+                    
+                    anchor={
+                        <TouchableOpacity style={styles.sortButton} onPress={() => setFilterClicked(true)}>
+                            <Icon name="filter-list" size={30} color="black" />
+                            <Text>Filter</Text>
+                        </TouchableOpacity>
+                    }
+                >
+                    <Menu.Item onPress={() => console.log("E then C")} title="Placeholder" />
+                    
+                    <Divider />
+                </Menu>
+            </View>
+        
         <FlatList
             style={styles.productsList}
             contentContainerStyle={styles.productsListContainer}
@@ -67,6 +117,8 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
                 />
             }
         />
+        </View>
+        </PaperProvider>
     );
 }
 
@@ -81,6 +133,22 @@ const getStyles = (colorScheme: "light" | "dark") => {
         productsListContainer: {
             backgroundColor: backgroundColor[colorScheme],
             marginHorizontal: 14,
+        },
+        sortLayout: {
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingTop: 10,
+            paddingBottom: 5, 
+            gap: 10,
+        },
+        sortButton: {
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "#00bfff",
+            borderRadius: 10,
+            minWidth: 70,  
+            gap: 2,
         },
     });
 };
