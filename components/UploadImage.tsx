@@ -1,13 +1,26 @@
-import React, { useState } from "react";
-import { Text, View, TouchableOpacity, Image, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useIsFocused } from "@react-navigation/native";
 
-export default function UploadImage({ onImagePick }) {
+interface UploadImageProps {
+    onImagePick: (uri: string, fileName: string, fileType: string) => void;
+}
+
+export default function UploadImage({ onImagePick }: UploadImageProps) {
     const [image, setImage] = useState<string | null>(null);
+    const isFocused = useIsFocused();
+
+    // Clear image when the screen is not focused
+    useEffect(() => {
+        if (!isFocused) {
+            setImage(null);
+        }
+    }, [isFocused]);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ["images"],
             allowsEditing: true,
             quality: 1,
         });
@@ -25,10 +38,12 @@ export default function UploadImage({ onImagePick }) {
     return (
         <View style={style.container}>
             {image ? (
+                // If an image is selected, display the image
                 <TouchableOpacity onPress={pickImage}>
                     <Image source={{ uri: image }} style={style.image} />
                 </TouchableOpacity>
             ) : (
+                // If no image is selected, display the upload button
                 <TouchableOpacity onPress={pickImage} style={style.uploadButton}>
                     <Text style={style.uploadText}>Select Image</Text>
                 </TouchableOpacity>
@@ -41,8 +56,8 @@ const style = StyleSheet.create({
     container: {
         justifyContent: "center",
         alignItems: "center",
-        width: "90%",
-        height: 300,
+        width: Dimensions.get("window").width * 0.9,
+        height: Dimensions.get("window").width * 0.75,
         marginTop: 20,
         marginBottom: 20,
         borderRadius: 10,
@@ -61,8 +76,11 @@ const style = StyleSheet.create({
         color: "#888",
     },
     image: {
-        width: 400,
-        height: 280,
+        width: Dimensions.get("window").width * 0.9,
+        height: Dimensions.get("window").width * 0.75,
         resizeMode: "cover",
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: "#ddd",
     },
 });
