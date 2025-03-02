@@ -166,16 +166,18 @@ export function CreateThisListing() {
 
                 <TouchableOpacity onPress={() => setIsNew(true)} style={styles.buttonLayout}>
                     <View style={[styles.buttonCircle, isNew && styles.optionPressed]} />
-                    <Text>New</Text>
+                    <Text style={styles.buttonText}>New</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => setIsNew(false)} style={styles.buttonLayout}>
                     <View style={[styles.buttonCircle, !isNew && styles.optionPressed]} />
-                    <Text>Used</Text>
+                    <Text style={styles.buttonText}>Used</Text>
                 </TouchableOpacity>
             </View>
 
-            <Button title="Create This Listing" onPress={createListing} />
+            <TouchableOpacity onPress={createListing} style={styles.createButton}>
+                <Text style={styles.createButtonText}>Create Listing</Text>
+            </TouchableOpacity>
         </TouchableOpacity>
     );
 }
@@ -214,6 +216,7 @@ const getStyles = (colorScheme: "light" | "dark") => {
         buttonText: {
             fontSize: 15,
             marginRight: 10,
+            color: textColor[colorScheme],
         },
         buttonLayout: {
             flexDirection: "row",
@@ -224,16 +227,25 @@ const getStyles = (colorScheme: "light" | "dark") => {
             width: 20,
             borderRadius: 10,
             borderWidth: 2,
-            borderColor: "black",
+            borderColor: borderColor[colorScheme],
             alignItems: "center",
             justifyContent: "center",
             marginRight: 8,
         },
         optionPressed: {
-            backgroundColor: "black",
+            backgroundColor: textColor[colorScheme],
         },
         placeholderText: {
             color: placeholderTextColor[colorScheme],
+        },
+        createButton: {
+            backgroundColor: "purple",
+            padding: 10,
+            borderRadius: 10,
+            marginTop: 10,
+        },
+        createButtonText: {
+            color: "white",
         },
     });
 };
