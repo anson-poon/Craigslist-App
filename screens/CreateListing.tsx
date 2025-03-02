@@ -73,19 +73,23 @@ export function CreateThisListing() {
 
     const { user } = useAuth();
 
+    const clearForm = useCallback(() => {
+        setProductName("");
+        setCategory("");
+        setDescription("");
+        setImageUri(null);
+        setFileName(null);
+        setFileType(null);
+        setIsNew(false);
+        setPrice("");
+        setTags("");
+    }, []);
+
     // Clear form when the screen is not focused
     const isFocused = useIsFocused();
     useEffect(() => {
         if (!isFocused) {
-            setProductName("");
-            setCategory("");
-            setDescription("");
-            setImageUri(null);
-            setFileName(null);
-            setFileType(null);
-            setIsNew(false);
-            setPrice("");
-            setTags("");
+            clearForm();
         }
     }, [isFocused]);
 
@@ -117,12 +121,11 @@ export function CreateThisListing() {
                         dateCreated: Timestamp.now(),
                     });
 
-                    Alert.alert("Success", "Your listing has been created!"); // IOS and Android
-                    alert("Your listing has been created!"); // Web
+                    alert("Your listing has been created!");
+                    clearForm();
                 }
             }
         } else {
-            Alert.alert("Error", "Please select an image.");
             alert("Please select an image.");
         }
     };
@@ -258,7 +261,8 @@ const getStyles = (colorScheme: "light" | "dark") => {
             backgroundColor: "purple",
             padding: 10,
             borderRadius: 10,
-            marginTop: 10,
+            marginTop: 20,
+            marginBottom: 20,
         },
         createButtonText: {
             color: "white",
