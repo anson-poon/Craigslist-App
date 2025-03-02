@@ -119,7 +119,9 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
 
                  
                 <View style={styles.searchBar}>
-                    <Icon name="search" size={25} color="black" />
+                    <TouchableOpacity>
+                        <Icon name="search" size={25} color="black" />
+                    </TouchableOpacity>
                     <TextInput
                         style={styles.searchBar}
                         placeholder="Search listings..."
