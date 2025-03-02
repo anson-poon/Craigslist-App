@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, RefreshControl, StyleSheet, useColorScheme, TouchableOpacity } from "react-native";
 import { Listing } from "../components/ListingCard";
-import { getListingsList } from "../services/ListingsService";
+import { getListingsList, getListingsListSortedByNewest, getListingsListSortedByOldest, getListingsListSortedByExpensive, getListingsListSortedByCheapest } from "../services/ListingsService";
 import { NavigationProp } from "@react-navigation/native";
 
 // Source URL: https://callstack.github.io/react-native-paper/docs/components/Menu/
@@ -33,6 +33,29 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
 
     // Flag when dropdown clicked 
     const [sortClicked, setSortClicked] = useState(false);
+
+    // Main function to call backend specific sort option 
+    const displaySortedBy = async (clickedSortOption: string) => {
+
+        setSortClicked(false); 
+
+        let whichSortedOption: ListingItem[] = [];
+
+        if (clickedSortOption === "newest") {
+            whichSortedOption = await getListingsListSortedByNewest();
+        } else if (clickedSortOption === "oldest") {
+            whichSortedOption = await getListingsListSortedByOldest();
+        } else if (clickedSortOption === "expensive") {
+            whichSortedOption = await getListingsListSortedByExpensive();
+        } else if (clickedSortOption === "cheapest") {
+            whichSortedOption = await getListingsListSortedByCheapest();
+        } else {
+            whichSortedOption = await getListingsList();
+        }
+
+        setListings(whichSortedOption);
+    };
+
     const [filterClicked, setFilterClicked] = useState(false);
 
 
@@ -54,6 +77,8 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
     return (
 
         <PaperProvider>
+
+        {/* Dropdown menu for sort and filter*/}
         <View>
             <View style={styles.sortLayout}>
                 <Menu
@@ -67,10 +92,10 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
                         </TouchableOpacity>
                     }
                 >
-                    <Menu.Item onPress={() => console.log("expensive")} title="Expensive" />
-                    <Menu.Item onPress={() => console.log("cheapest")} title="Cheapest" />
-                    <Menu.Item onPress={() => console.log("recent")} title="Recent" />
-                    <Menu.Item onPress={() => console.log("oldest")} title="Oldest" />
+                    <Menu.Item onPress={() => displaySortedBy("expensive")} title="Expensive" />
+                    <Menu.Item onPress={() => displaySortedBy("cheapest")} title="Cheapest" />
+                    <Menu.Item onPress={() => displaySortedBy("recent")} title="Recent" />
+                    <Menu.Item onPress={() => displaySortedBy("oldest")} title="Oldest" />
                     <Divider />
                 </Menu>
 
