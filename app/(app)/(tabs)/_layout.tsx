@@ -117,13 +117,15 @@ export default function TabLayout() {
     return (
         <Tab.Navigator
             screenOptions={{
+                headerShown: false,
                 tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+                tabBarLabelPosition: "below-icon",
                 tabBarStyle: {
                     backgroundColor: colorScheme === "dark" ? "#181818" : "white",
-                    height: 60,
-                    padding: 5,
+                    height: 65,
+                    paddingTop: 5,
                 },
-                headerShown: false,
+                animation: "shift",
             }}
         >
             <Tab.Screen
