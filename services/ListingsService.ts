@@ -146,6 +146,29 @@ export async function getListingByName(name: string) {
 
 }
 
+import { where } from "firebase/firestore";
+
+/*
+  Retrieve listings by tag(s)
+  Returns a list of listings with specified tags 
+*/
+export async function getListingsByTags(tag: string) {
+  try {
+    const listingsCol = collection(FIREBASE_DB, "listings");
+
+    // Specified query 
+    const thisQuery = query(listingsCol, where("tags", "array-contains", tag));
+
+    const listingsSnapshot = await getDocs(thisQuery);
+    return listingsSnapshot.docs.map(formatListing);
+  
+  } catch (error) {
+    console.error(`No listing(s) found`, error);
+    return [];
+  }
+}
+
+
 /*
   Sort by Newest 
   Source URL: https://firebase.google.com/docs/firestore/query-data/order-limit-data
