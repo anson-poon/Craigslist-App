@@ -7,6 +7,7 @@ import { NavigationProp } from "@react-navigation/native";
 // Source URL: https://callstack.github.io/react-native-paper/docs/components/Menu/
 import { Menu, Divider, PaperProvider } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { TextInput } from "react-native-gesture-handler";
 
 
 
@@ -57,6 +58,7 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
     };
 
     const [filterClicked, setFilterClicked] = useState(false);
+
 
 
     useEffect(() => {
@@ -114,6 +116,17 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
                     
                     <Divider />
                 </Menu>
+
+                 
+                <View style={styles.searchBar}>
+                    <Icon name="search" size={25} color="black" />
+                    <TextInput
+                        style={styles.searchBar}
+                        placeholder="Search listings..."
+                        placeholderTextColor="gray"
+                    />
+                </View>
+
             </View>
         
         <FlatList
@@ -175,5 +188,19 @@ const getStyles = (colorScheme: "light" | "dark") => {
             minWidth: 70,  
             gap: 2,
         },
+        searchBar: {
+            flexDirection: "row",
+            backgroundColor: "#00bfff", 
+            borderRadius: 10,
+            color: "black",
+            minWidth: 70,
+            paddingTop: 3,
+            paddingBottom: 3,
+            alignItems: "center",
+            justifyContent: "center",
+            textAlignVertical: "center"
+            
+        },
+
     });
 };
