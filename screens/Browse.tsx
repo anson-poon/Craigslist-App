@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, RefreshControl, StyleSheet, useColorScheme } from "react-native";
+import {
+    View,
+    Text,
+    FlatList,
+    RefreshControl,
+    StyleSheet,
+    useColorScheme,
+    ToastAndroid,
+    Platform,
+    Alert,
+} from "react-native";
 import { Listing } from "../components/ListingCard";
 import { getListingsList } from "../services/ListingsService";
 import { NavigationProp } from "@react-navigation/native";
@@ -38,6 +48,13 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
             setListings(await getListingsList());
             setRefreshing(false);
         }, 2000);
+
+        const msg = "Listings refreshed";
+        if (Platform.OS === "android") {
+            ToastAndroid.show(msg, ToastAndroid.SHORT);
+        } else {
+            Alert.alert(msg);
+        }
     };
 
     return (
