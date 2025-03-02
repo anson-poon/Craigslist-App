@@ -1,5 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert, useColorScheme } from "react-native";
+import {
+    View,
+    Text,
+    TextInput,
+    Button,
+    StyleSheet,
+    TouchableOpacity,
+    Alert,
+    useColorScheme,
+    ScrollView,
+    KeyboardAvoidingView,
+} from "react-native";
 
 import { createNewListing } from "../services/ListingsService";
 import { Timestamp } from "firebase/firestore";
@@ -117,68 +128,74 @@ export function CreateThisListing() {
     };
 
     return (
-        <TouchableOpacity style={styles.basicLayout}>
-            <UploadImage onImagePick={handleImagePick} />
+        <ScrollView>
+            <KeyboardAvoidingView
+                behavior="position"
+                style={styles.basicLayout}
+                contentContainerStyle={{ alignItems: "center" }}
+            >
+                <UploadImage onImagePick={handleImagePick} />
 
-            <TextInput
-                style={styles.textField}
-                placeholder="Product Name"
-                placeholderTextColor={styles.placeholderText.color}
-                value={productName}
-                onChangeText={setProductName}
-            />
+                <TextInput
+                    style={styles.textField}
+                    placeholder="Product Name"
+                    placeholderTextColor={styles.placeholderText.color}
+                    value={productName}
+                    onChangeText={setProductName}
+                />
 
-            <TextInput
-                style={styles.textField}
-                placeholder="Category"
-                placeholderTextColor={styles.placeholderText.color}
-                value={category}
-                onChangeText={setCategory}
-            />
+                <TextInput
+                    style={styles.textField}
+                    placeholder="Category"
+                    placeholderTextColor={styles.placeholderText.color}
+                    value={category}
+                    onChangeText={setCategory}
+                />
 
-            <TextInput
-                style={styles.textField}
-                placeholder="Description"
-                placeholderTextColor={styles.placeholderText.color}
-                value={description}
-                onChangeText={setDescription}
-            />
+                <TextInput
+                    style={styles.textField}
+                    placeholder="Description"
+                    placeholderTextColor={styles.placeholderText.color}
+                    value={description}
+                    onChangeText={setDescription}
+                />
 
-            <TextInput
-                style={styles.textField}
-                placeholder="Price"
-                placeholderTextColor={styles.placeholderText.color}
-                keyboardType="numeric"
-                value={price}
-                onChangeText={setPrice}
-            />
+                <TextInput
+                    style={styles.textField}
+                    placeholder="Price"
+                    placeholderTextColor={styles.placeholderText.color}
+                    keyboardType="numeric"
+                    value={price}
+                    onChangeText={setPrice}
+                />
 
-            <TextInput
-                style={styles.textField}
-                placeholder="Enter tags with commas i.e computer, laptop, desktop"
-                placeholderTextColor={styles.placeholderText.color}
-                value={tags}
-                onChangeText={setTags}
-            />
+                <TextInput
+                    style={styles.textField}
+                    placeholder="Enter tags with commas i.e computer, laptop, desktop"
+                    placeholderTextColor={styles.placeholderText.color}
+                    value={tags}
+                    onChangeText={setTags}
+                />
 
-            <View style={styles.buttonContainer}>
-                <Text style={styles.buttonText}>Condition:</Text>
+                <View style={styles.buttonContainer}>
+                    <Text style={styles.buttonText}>Condition:</Text>
 
-                <TouchableOpacity onPress={() => setIsNew(true)} style={styles.buttonLayout}>
-                    <View style={[styles.buttonCircle, isNew && styles.optionPressed]} />
-                    <Text style={styles.buttonText}>New</Text>
+                    <TouchableOpacity onPress={() => setIsNew(true)} style={styles.buttonLayout}>
+                        <View style={[styles.buttonCircle, isNew && styles.optionPressed]} />
+                        <Text style={styles.buttonText}>New</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => setIsNew(false)} style={styles.buttonLayout}>
+                        <View style={[styles.buttonCircle, !isNew && styles.optionPressed]} />
+                        <Text style={styles.buttonText}>Used</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity onPress={createListing} style={styles.createButton}>
+                    <Text style={styles.createButtonText}>Create Listing</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => setIsNew(false)} style={styles.buttonLayout}>
-                    <View style={[styles.buttonCircle, !isNew && styles.optionPressed]} />
-                    <Text style={styles.buttonText}>Used</Text>
-                </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity onPress={createListing} style={styles.createButton}>
-                <Text style={styles.createButtonText}>Create Listing</Text>
-            </TouchableOpacity>
-        </TouchableOpacity>
+            </KeyboardAvoidingView>
+        </ScrollView>
     );
 }
 
@@ -191,7 +208,6 @@ const getStyles = (colorScheme: "light" | "dark") => {
 
     return StyleSheet.create({
         basicLayout: {
-            alignItems: "center",
             height: "100%",
             width: "100%",
             backgroundColor: backgroundColor[colorScheme],
