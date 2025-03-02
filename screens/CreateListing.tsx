@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert, useColorScheme } from "react-native";
 
 import { createNewListing } from "../services/ListingsService";
 import { Timestamp } from "firebase/firestore";
-import UploadImage from "../components/UploadImage"; // Ensure this is correctly imported
+import UploadImage from "../components/UploadImage";
+import { useAuth } from "../AuthContext";
+import { useNavigation } from "@react-navigation/native";
 
 const getPresignedUrl = async (fileName: string, fileType: string) => {
     try {
-        const response = await fetch("http://172.16.224.152:8082/get-presigned-url", {
+        const response = await fetch("http://192.168.1.153:8082/get-presigned-url", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -54,19 +56,19 @@ export function CreateThisListing() {
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [fileName, setFileName] = useState<string | null>(null);
     const [fileType, setFileType] = useState<string | null>(null);
-
     const [isNew, setIsNew] = useState(false);
     const [price, setPrice] = useState("");
-
-    const [userID, setUserID] = useState("");
-
     const [tags, setTags] = useState("");
+
+    const { user } = useAuth();
 
     const handleImagePick = (uri: string, name: string, type: string) => {
         setImageUri(uri);
         setFileName(name);
         setFileType(type);
     };
+
+    const navigation = useNavigation();
 
     const createListing = async () => {
         if (imageUri && fileName && fileType) {
@@ -85,21 +87,23 @@ export function CreateThisListing() {
                         imageUrl: uploadedImageUrl,
                         isNew,
                         price: numericPrice,
-                        userID,
+                        userID: user?.uid || "",
                         tags: tagArr,
                         dateCreated: Timestamp.now(),
                     });
 
-                    Alert.alert("Success", "Your listing has been created!");
+                    Alert.alert("Success", "Your listing has been created!"); // IOS and Android
+                    alert("Your listing has been created!"); // Web
                 }
             }
         } else {
             Alert.alert("Error", "Please select an image.");
+            alert("Please select an image.");
         }
     };
 
     return (
-        <View style={styles.basicLayout}>
+        <TouchableOpacity style={styles.basicLayout}>
             <UploadImage onImagePick={handleImagePick} />
 
             <TextInput
@@ -158,7 +162,7 @@ export function CreateThisListing() {
             </View>
 
             <Button title="Create This Listing" onPress={createListing} />
-        </View>
+        </TouchableOpacity>
     );
 }
 
@@ -172,7 +176,8 @@ const getStyles = (colorScheme: "light" | "dark") => {
     return StyleSheet.create({
         basicLayout: {
             alignItems: "center",
-            flex: 1,
+            height: "100%",
+            width: "100%",
             backgroundColor: backgroundColor[colorScheme],
         },
         textField: {
