@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert, useColorScheme } from "react-native";
 
 import { createNewListing } from "../services/ListingsService";
 import { Timestamp } from "firebase/firestore";
 import UploadImage from "../components/UploadImage";
 import { useAuth } from "../AuthContext";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 const getPresignedUrl = async (fileName: string, fileType: string) => {
     try {
@@ -62,13 +62,27 @@ export function CreateThisListing() {
 
     const { user } = useAuth();
 
+    // Clear form when the screen is not focused
+    const isFocused = useIsFocused();
+    useEffect(() => {
+        if (!isFocused) {
+            setProductName("");
+            setCategory("");
+            setDescription("");
+            setImageUri(null);
+            setFileName(null);
+            setFileType(null);
+            setIsNew(false);
+            setPrice("");
+            setTags("");
+        }
+    }, [isFocused]);
+
     const handleImagePick = (uri: string, name: string, type: string) => {
         setImageUri(uri);
         setFileName(name);
         setFileType(type);
     };
-
-    const navigation = useNavigation();
 
     const createListing = async () => {
         if (imageUri && fileName && fileType) {
