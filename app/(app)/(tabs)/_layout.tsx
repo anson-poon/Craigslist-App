@@ -48,13 +48,15 @@ function BrowseStack() {
                     title: "All Listings",
                     headerTitleStyle: styles.headerTitle,
                     headerRight: () => (
-                        <Button
-                            title="Sign out"
+                        <TouchableOpacity
+                            style={styles.signOutButton}
                             onPress={() => {
                                 const auth = getAuth();
                                 signOut(auth);
                             }}
-                        />
+                        >
+                            <Text style={styles.signOutButtonText}>Sign out</Text>
+                        </TouchableOpacity>
                     ),
                 })}
             />
@@ -115,11 +117,15 @@ export default function TabLayout() {
     return (
         <Tab.Navigator
             screenOptions={{
+                headerShown: false,
                 tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+                tabBarLabelPosition: "below-icon",
                 tabBarStyle: {
                     backgroundColor: colorScheme === "dark" ? "#181818" : "white",
+                    height: 65,
+                    paddingTop: 5,
                 },
-                headerShown: false,
+                animation: "shift",
             }}
         >
             <Tab.Screen
@@ -136,6 +142,7 @@ export default function TabLayout() {
                 options={{
                     title: "My Listings",
                     tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+                    headerShown: true,
                 }}
             />
 
@@ -143,8 +150,10 @@ export default function TabLayout() {
                 name="CreateListing"
                 component={CreateThisListing}
                 options={{
-                    title: "Create",
+                    title: "Create Listing",
                     tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
+                    headerShown: true,
+                    headerTitleStyle: styles.headerTitle,
                 }}
             />
 
@@ -154,6 +163,8 @@ export default function TabLayout() {
                 options={{
                     title: "Chat",
                     tabBarIcon: ({ color }) => <TabBarIcon name="comments" color={color} />,
+                    headerShown: true,
+                    headerTitleStyle: styles.headerTitle,
                 }}
             />
 
@@ -172,6 +183,8 @@ export default function TabLayout() {
                 options={{
                     title: "Upload (Remove later)",
                     tabBarIcon: ({ color }) => <TabBarIcon name="image" color={color} />,
+                    headerShown: true,
+                    headerTitleStyle: styles.headerTitle,
                 }}
             />
         </Tab.Navigator>
@@ -181,8 +194,19 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 20,
+        fontWeight: "semibold",
+        marginLeft: 10,
     },
     settingsIcon: {
         marginRight: 10,
+    },
+    signOutButton: {
+        marginRight: 10,
+        padding: 8,
+        backgroundColor: "purple",
+        borderRadius: 10,
+    },
+    signOutButtonText: {
+        color: "white",
     },
 });
