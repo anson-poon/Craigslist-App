@@ -6,9 +6,10 @@ import { useIsFocused } from "@react-navigation/native";
 
 interface UploadImageProps {
     onImagePick: (uri: string, fileName: string, fileType: string) => void;
+    clearImageTrigger?: boolean;
 }
 
-export default function UploadImage({ onImagePick }: UploadImageProps) {
+export default function UploadImage({ onImagePick, clearImageTrigger }: UploadImageProps) {
     const colorScheme = useColorScheme() ?? "light";
     const styles = getStyles(colorScheme);
     const [image, setImage] = useState<string | null>(null);
@@ -20,6 +21,13 @@ export default function UploadImage({ onImagePick }: UploadImageProps) {
             setImage(null);
         }
     }, [isFocused]);
+
+    // Clear image when the clearImageTrigger changes
+    useEffect(() => {
+        if (clearImageTrigger) {
+            setImage(null); // Reset the image state
+        }
+    }, [clearImageTrigger]);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({

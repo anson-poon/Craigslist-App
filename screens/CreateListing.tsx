@@ -3,10 +3,8 @@ import {
     View,
     Text,
     TextInput,
-    Button,
     StyleSheet,
     TouchableOpacity,
-    Alert,
     useColorScheme,
     ScrollView,
     KeyboardAvoidingView,
@@ -73,6 +71,8 @@ export function CreateThisListing() {
 
     const { user } = useAuth();
 
+    const [clearImage, setClearImage] = useState(false);
+
     const clearForm = useCallback(() => {
         setProductName("");
         setCategory("");
@@ -83,6 +83,9 @@ export function CreateThisListing() {
         setIsNew(false);
         setPrice("");
         setTags("");
+
+        setClearImage(true);
+        setTimeout(() => setClearImage(false), 100);
     }, []);
 
     // Clear form when the screen is not focused
@@ -137,7 +140,7 @@ export function CreateThisListing() {
                 style={styles.basicLayout}
                 contentContainerStyle={{ alignItems: "center" }}
             >
-                <UploadImage onImagePick={handleImagePick} />
+                <UploadImage onImagePick={handleImagePick} clearImageTrigger={clearImage} />
 
                 <TextInput
                     style={styles.textField}
