@@ -14,11 +14,13 @@ export function UserProfile({ navigation }: { navigation: NavigationProp<any> })
 
     const { user } = useAuth(); 
     const [username, setUsername] = useState("");
+    const [description, setDescription] = useState("");
 
-    // Obtains user's username
+    // Sets user's fields 
     if (user) {
       getUserByID(user.uid).then((data) => {
           setUsername(data?.username);
+          setDescription(data?.description);
       });
     }
 
@@ -38,8 +40,7 @@ export function UserProfile({ navigation }: { navigation: NavigationProp<any> })
           <Image source={require("../assets/images/dog.jpg")} style={styles.profilePhotoImage} />
 
             <Text style={styles.description}>
-                    I am an example user on this platform. I have sold X amount of products, 
-                    and Y amount of feedback has been given to me!
+            {description}
             </Text>
 
       </View>
