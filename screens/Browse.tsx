@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, RefreshControl, StyleSheet, useColorScheme, TouchableOpacity } from "react-native";
 import { Listing } from "../components/ListingCard";
-import { getListingsList, getListingsListSortedByNewest, getListingsListSortedByOldest, getListingsListSortedByExpensive, getListingsListSortedByCheapest } from "../services/ListingsService";
+import { getListingsList, getListingsListSortedByNewest, getListingsListSortedByOldest, getListingsListSortedByExpensive, getListingsListSortedByCheapest, getListingsByTags } from "../services/ListingsService";
 import { NavigationProp } from "@react-navigation/native";
 
 // Source URL: https://callstack.github.io/react-native-paper/docs/components/Menu/
@@ -59,7 +59,18 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
 
     const [filterClicked, setFilterClicked] = useState(false);
 
+    // search tag identifier 
+    const [thisTag, setThisTag] = useState(""); 
 
+    // search function by tag 
+    const searchByTag = async () => {
+        if (thisTag) {
+            const resultsThisTag = await getListingsByTags(thisTag);
+            setListings(resultsThisTag);
+        } else {
+            setListings(await getListingsList());
+        }
+    };
 
     useEffect(() => {
         (async () => {
@@ -89,7 +100,7 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
                     
                     anchor={
                         <TouchableOpacity style={styles.sortButton} onPress={() => setSortClicked(true)}>
-                            <Icon name="unfold-more" size={30} color="black" />
+                            <Icon name="unfold-more" size={25} color="black" />
                             <Text>Sort</Text>
                         </TouchableOpacity>
                     }
@@ -118,15 +129,20 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
                 </Menu>
 
                  
+                {/* Search by tag UI */}
                 <View style={styles.searchBar}>
+
                     <TouchableOpacity>
-                        <Icon name="search" size={25} color="black" />
+                        <Icon name="search" size={30} color="black" />
                     </TouchableOpacity>
+
                     <TextInput
-                        style={styles.searchBar}
-                        placeholder="Search listings..."
-                        placeholderTextColor="gray"
-                    />
+                            placeholder="Search listings here!"
+                            placeholderTextColor="gray"
+                            value={thisTag}
+                            onChangeText={setThisTag}
+                            onSubmitEditing={searchByTag} 
+                        />
                 </View>
 
             </View>
