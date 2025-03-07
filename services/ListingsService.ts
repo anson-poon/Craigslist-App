@@ -253,3 +253,94 @@ export async function getListingsListSortedByCheapest() {
     return [];
   }
 }
+
+
+/////////////////////////// FILTER ///////////////////////////////////////////////////////////
+
+/*
+  Filtered by Hundred Dollars Plus
+  Source URL: https://firebase.google.com/docs/firestore/query-data/order-limit-data
+  Source URL: https://firebase.google.com/docs/firestore/query-data/get-data
+*/
+
+export async function getListingsListingsFilteredByHundredPlus() {
+  try {
+    const listingsCol = collection(FIREBASE_DB, "listings"); 
+
+    // Specified query 
+    const thisQuery = query(listingsCol, where("price", ">", 100));
+
+    const listingsSnapshot = await getDocs(thisQuery);
+    return listingsSnapshot.docs.map(formatListing);
+
+  } catch (error) {
+    console.error("Error fetching filtered listings:", error);
+    return [];
+  }
+}
+
+/*
+  Filtered by Hundred Dollars Less
+  Source URL: https://firebase.google.com/docs/firestore/query-data/order-limit-data
+  Source URL: https://firebase.google.com/docs/firestore/query-data/get-data
+*/
+
+export async function getListingsListingsFilteredByHundredLess() {
+  try {
+    const listingsCol = collection(FIREBASE_DB, "listings"); 
+
+    // Specified query 
+    const thisQuery = query(listingsCol, where("price", "<", 100));
+
+    const listingsSnapshot = await getDocs(thisQuery);
+    return listingsSnapshot.docs.map(formatListing);
+
+  } catch (error) {
+    console.error("Error fetching sorted listings:", error);
+    return [];
+  }
+}
+
+/*
+  Filtered by Used
+  Source URL: https://firebase.google.com/docs/firestore/query-data/order-limit-data
+  Source URL: https://firebase.google.com/docs/firestore/query-data/get-data
+*/
+
+export async function getListingsListFilteredByUsed() {
+  try {
+    const listingsCol = collection(FIREBASE_DB, "listings"); 
+
+    // Specified query 
+    const thisQuery = query(listingsCol, where("isNew", "==", false));
+
+    const listingsSnapshot = await getDocs(thisQuery);
+    return listingsSnapshot.docs.map(formatListing);
+
+  } catch (error) {
+    console.error("Error fetching sorted listings:", error);
+    return [];
+  }
+}
+
+/*
+  Filtered by New
+  Source URL: https://firebase.google.com/docs/firestore/query-data/order-limit-data
+  Source URL: https://firebase.google.com/docs/firestore/query-data/get-data
+*/
+
+export async function getListingsListFilteredByNew() {
+  try {
+    const listingsCol = collection(FIREBASE_DB, "listings"); 
+
+    // Specified query 
+    const thisQuery = query(listingsCol, where("isNew", "==", true)); 
+
+    const listingsSnapshot = await getDocs(thisQuery);
+    return listingsSnapshot.docs.map(formatListing);
+
+  } catch (error) {
+    console.error("Error fetching sorted listings:", error);
+    return [];
+  }
+}
