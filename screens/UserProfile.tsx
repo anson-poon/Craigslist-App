@@ -15,7 +15,7 @@ export function UserProfile({ navigation }: { navigation: NavigationProp<any> })
     const { user } = useAuth(); 
     const [username, setUsername] = useState("");
 
-    // Obtains user's username 
+    // Obtains user's username
     if (user) {
       getUserByID(user.uid).then((data) => {
           setUsername(data?.username);
