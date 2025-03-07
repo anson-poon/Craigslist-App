@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, RefreshControl, StyleSheet, useColorScheme, TouchableOpacity } from "react-native";
 import { Listing } from "../components/ListingCard";
 import { getListingsList, getListingsListSortedByNewest, getListingsListSortedByOldest, getListingsListSortedByExpensive, getListingsListSortedByCheapest, getListingsByTags } from "../services/ListingsService";
+
+// FILTER
+import { getListingsListingsFilteredByHundredPlus, getListingsListingsFilteredByHundredLess, getListingsListFilteredByUsed, getListingsListFilteredByNew } from "../services/ListingsService";
 import { NavigationProp } from "@react-navigation/native";
 
 // Source URL: https://callstack.github.io/react-native-paper/docs/components/Menu/
@@ -59,6 +62,29 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
 
     const [filterClicked, setFilterClicked] = useState(false);
 
+
+    // Main function to call backend specific filtered option  
+    const displayFilteredBy = async (clickedFilterOption: string) => {
+
+        setFilterClicked(false); 
+
+        let whichFilteredOption: ListingItem[] = [];
+
+        if (clickedFilterOption === "> $100") {
+            whichFilteredOption = await getListingsListingsFilteredByHundredPlus();
+        } else if (clickedFilterOption === "< $100") {
+            whichFilteredOption = await getListingsListingsFilteredByHundredLess();
+        } else if (clickedFilterOption === "Used") {
+            whichFilteredOption = await getListingsListFilteredByUsed();
+        } else if (clickedFilterOption === "New") {
+            whichFilteredOption = await getListingsListFilteredByNew();
+        } else {
+            whichFilteredOption = await getListingsList();
+        }
+
+        setListings(whichFilteredOption);
+    };
+
     // search tag identifier 
     const [thisTag, setThisTag] = useState(""); 
 
@@ -94,6 +120,8 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
         {/* Dropdown menu for sort and filter*/}
         <View>
             <View style={styles.sortLayout}>
+
+                {/* Sorted by */}
                 <Menu
                     visible={sortClicked}
                     onDismiss={() => setSortClicked(false)}
@@ -112,6 +140,7 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
                     <Divider />
                 </Menu>
 
+                {/* Filtered by */}
                 <Menu
                     visible={filterClicked}
                     onDismiss={() => setFilterClicked(false)}
@@ -123,7 +152,11 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
                         </TouchableOpacity>
                     }
                 >
-                    <Menu.Item onPress={() => console.log("E then C")} title="Placeholder" />
+                    
+                    <Menu.Item onPress={() => displayFilteredBy("> $100")} title="> $100" />
+                    <Menu.Item onPress={() => displayFilteredBy("< $100")} title="< $100" />
+                    <Menu.Item onPress={() => displayFilteredBy("Used")} title="Used" />
+                    <Menu.Item onPress={() => displayFilteredBy("New")} title="New" />
                     
                     <Divider />
                 </Menu>
