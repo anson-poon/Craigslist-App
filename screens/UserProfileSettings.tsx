@@ -25,12 +25,22 @@ export function UserProfileSettings() {
       updateExistingUser(user.uid, { username });
     }
   };
+
+  // Function to update description in Firestore
+  const usersDescriptionUpdate = () => {
+    if (user?.uid) {
+      updateExistingUser(user.uid, { description: description || "Description not created!" });
+    }
+  };
   
   return (
+
+    /* Form Fields */
+
     <View style={styles.basicLayout}>
       <Text style={styles.pageLabel}>User Settings</Text>
 
-      {/* Form Fields */}
+      
       <View style={styles.formContainer}>
         <Text style={styles.formLabel}>Email:</Text> 
         <View style={styles.row}>
@@ -39,28 +49,15 @@ export function UserProfileSettings() {
         </View>
       </View>
 
-      <View style={styles.formContainer}>
-        <Text style={styles.formLabel}>First Name:</Text> 
-        <View style={styles.row}>
-          <TextInput style={styles.text} value={firstname} onChangeText={setFirstName} />
-          <Button title="Save" />
-        </View>
-      </View>
-
-      
-      <View style={styles.formContainer}>
-        <Text style={styles.formLabel}>Last Name:</Text> 
-        <View style={styles.row}>
-          <TextInput style={styles.text} value={lastname} onChangeText={setLastName} />
-          <Button title="Save" />
-        </View>
-      </View>
-
+      {/* Done */}
       <View style={styles.formContainer}>
         <Text style={styles.formLabel}>Username:</Text> 
         <View style={styles.row}>
           <TextInput style={styles.text} value={username} onChangeText={setUsername} />
-          <Button title="Save" onPress={usersUsernameUpdate} />
+          <Button title="Save" onPress={() => { 
+            usersUsernameUpdate(); 
+            alert("Username Changed!"); 
+          }} />
         </View>
       </View>
  
@@ -73,11 +70,15 @@ export function UserProfileSettings() {
       </View>
 
     
+      {/* Done */}
       <View style={styles.formContainer}>
         <Text style={styles.formLabel}>User Description:</Text> 
         <View style={styles.row}>
           <TextInput style={styles.text} value={description} onChangeText={setDescription} />
-          <Button title="Save"/>
+          <Button title="Save" onPress={() => { 
+            usersDescriptionUpdate(); 
+            alert("Description changed or created!"); 
+          }} />
         </View>
       </View>
 
