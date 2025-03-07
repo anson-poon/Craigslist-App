@@ -9,8 +9,6 @@ export function UserProfileSettings() {
 
   // Mandatory Fields
   const [email, setEmail] = useState("");
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
@@ -49,6 +47,14 @@ export function UserProfileSettings() {
         </View>
       </View>
 
+      <View style={styles.formContainer}>
+        <Text style={styles.formLabel}>Password:</Text> 
+        <View style={styles.row}>
+          <TextInput style={styles.text} value={password} onChangeText={setPassword} />
+          <Button title="Save" />
+        </View>
+      </View>
+
       {/* Done */}
       <View style={styles.formContainer}>
         <Text style={styles.formLabel}>Username:</Text> 
@@ -60,15 +66,6 @@ export function UserProfileSettings() {
           }} />
         </View>
       </View>
- 
-      <View style={styles.formContainer}>
-        <Text style={styles.formLabel}>Password:</Text> 
-        <View style={styles.row}>
-          <TextInput style={styles.text} value={password} onChangeText={setPassword} />
-          <Button title="Save" />
-        </View>
-      </View>
-
     
       {/* Done */}
       <View style={styles.formContainer}>
