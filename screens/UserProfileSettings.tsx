@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-
-import { updateExistingUser } from "@/services/UsersService";
+import { updateExistingUser } from "@/services/UserServices";
+import { useAuth } from "@/AuthContext";
 
 export function UserProfileSettings() {
+
+  const { user } = useAuth(); // Get authenticated user
 
   // Mandatory Fields
   const [email, setEmail] = useState("");
@@ -15,6 +17,14 @@ export function UserProfileSettings() {
   // Optional Fields
   const [description, setDescription] = useState("");
   // const [profilePicture, setProfilePicture] = useState("null");
+
+
+  // Function to update username in Firestore
+  const usersUsernameUpdate = () => {
+    if (user?.uid) {
+      updateExistingUser(user.uid, { username });
+    }
+  };
   
   return (
     <View style={styles.basicLayout}>
@@ -50,7 +60,7 @@ export function UserProfileSettings() {
         <Text style={styles.formLabel}>Username:</Text> 
         <View style={styles.row}>
           <TextInput style={styles.text} value={username} onChangeText={setUsername} />
-          <Button title="Save" />
+          <Button title="Save" onPress={usersUsernameUpdate} />
         </View>
       </View>
  
