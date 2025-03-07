@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
+
+import { getUserByID } from "@/services/UserServices";
 
 // Neccessary for this page and the settings page later for auth use 
 import { useAuth } from "@/AuthContext"; 
@@ -11,6 +13,15 @@ import { useAuth } from "@/AuthContext";
 export function UserProfile({ navigation }: { navigation: NavigationProp<any> }) {
 
     const { user } = useAuth(); 
+    const [username, setUsername] = useState("");
+
+    // Obtains user's username 
+    if (user) {
+      getUserByID(user.uid).then((data) => {
+          setUsername(data?.username);
+      });
+    }
+
 
     return (
     <View style={styles.basicLayout}>
@@ -21,7 +32,7 @@ export function UserProfile({ navigation }: { navigation: NavigationProp<any> })
 
         {/* Display Username with Auth Dynamically  */} 
         <Text style={styles.userName}>
-          {user?.displayName || "User Not Found"}
+          {username}
         </Text>
 
           <Image source={require("../assets/images/dog.jpg")} style={styles.profilePhotoImage} />
