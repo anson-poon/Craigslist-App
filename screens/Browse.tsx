@@ -166,7 +166,7 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
                 <View style={styles.searchBar}>
 
                     <TouchableOpacity>
-                        <Icon name="search" size={30} color="black" />
+                        <Icon name="search" size={25} color="black" />
                     </TouchableOpacity>
 
                     <TextInput
