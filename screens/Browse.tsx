@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, RefreshControl, StyleSheet, useColorScheme, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, RefreshControl, StyleSheet, useColorScheme, TouchableOpacity, Platform, ToastAndroid, Alert } from "react-native";
 import { Listing } from "../components/ListingCard";
 import { getListingsList, getListingsListSortedByNewest, getListingsListSortedByOldest, getListingsListSortedByExpensive, getListingsListSortedByCheapest, getListingsByTags } from "../services/ListingsService";
 
