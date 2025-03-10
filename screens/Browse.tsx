@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import {
-    View,
-    Text,
-    FlatList,
-    RefreshControl,
-    StyleSheet,
-    useColorScheme,
-    ToastAndroid,
-    Platform,
-    Alert,
-} from "react-native";
+import { View, Text, FlatList, RefreshControl, StyleSheet, useColorScheme, TouchableOpacity } from "react-native";
 import { Listing } from "../components/ListingCard";
-import { getListingsList } from "../services/ListingsService";
+import { getListingsList, getListingsListSortedByNewest, getListingsListSortedByOldest, getListingsListSortedByExpensive, getListingsListSortedByCheapest, getListingsByTags } from "../services/ListingsService";
+
+// FILTER
+import { getListingsListingsFilteredByHundredPlus, getListingsListingsFilteredByHundredLess, getListingsListFilteredByUsed, getListingsListFilteredByNew } from "../services/ListingsService";
 import { NavigationProp } from "@react-navigation/native";
+
+// Source URL: https://callstack.github.io/react-native-paper/docs/components/Menu/
+import { Menu, Divider, PaperProvider } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { TextInput } from "react-native-gesture-handler";
+
+
 
 interface ListingItem {
     id: string;
@@ -34,6 +34,69 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
     const [refreshing, setRefreshing] = useState(false);
     const colorScheme = useColorScheme() ?? "light";
     const styles = getStyles(colorScheme);
+
+    // Flag when dropdown clicked 
+    const [sortClicked, setSortClicked] = useState(false);
+
+    // Main function to call backend specific sort option 
+    const displaySortedBy = async (clickedSortOption: string) => {
+
+        setSortClicked(false); 
+
+        let whichSortedOption: ListingItem[] = [];
+
+        if (clickedSortOption === "newest") {
+            whichSortedOption = await getListingsListSortedByNewest();
+        } else if (clickedSortOption === "oldest") {
+            whichSortedOption = await getListingsListSortedByOldest();
+        } else if (clickedSortOption === "expensive") {
+            whichSortedOption = await getListingsListSortedByExpensive();
+        } else if (clickedSortOption === "cheapest") {
+            whichSortedOption = await getListingsListSortedByCheapest();
+        } else {
+            whichSortedOption = await getListingsList();
+        }
+
+        setListings(whichSortedOption);
+    };
+
+    const [filterClicked, setFilterClicked] = useState(false);
+
+
+    // Main function to call backend specific filtered option  
+    const displayFilteredBy = async (clickedFilterOption: string) => {
+
+        setFilterClicked(false); 
+
+        let whichFilteredOption: ListingItem[] = [];
+
+        if (clickedFilterOption === "> $100") {
+            whichFilteredOption = await getListingsListingsFilteredByHundredPlus();
+        } else if (clickedFilterOption === "< $100") {
+            whichFilteredOption = await getListingsListingsFilteredByHundredLess();
+        } else if (clickedFilterOption === "Used") {
+            whichFilteredOption = await getListingsListFilteredByUsed();
+        } else if (clickedFilterOption === "New") {
+            whichFilteredOption = await getListingsListFilteredByNew();
+        } else {
+            whichFilteredOption = await getListingsList();
+        }
+
+        setListings(whichFilteredOption);
+    };
+
+    // search tag identifier 
+    const [thisTag, setThisTag] = useState(""); 
+
+    // search function by tag 
+    const searchByTag = async () => {
+        if (thisTag) {
+            const resultsThisTag = await getListingsByTags(thisTag);
+            setListings(resultsThisTag);
+        } else {
+            setListings(await getListingsList());
+        }
+    };
 
     useEffect(() => {
         (async () => {
@@ -58,6 +121,72 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
     };
 
     return (
+
+        <PaperProvider>
+
+        {/* Dropdown menu for sort and filter*/}
+        <View>
+            <View style={styles.sortLayout}>
+
+                {/* Sorted by */}
+                <Menu
+                    visible={sortClicked}
+                    onDismiss={() => setSortClicked(false)}
+                    
+                    anchor={
+                        <TouchableOpacity style={styles.sortButton} onPress={() => setSortClicked(true)}>
+                            <Icon name="unfold-more" size={25} color="black" />
+                            <Text>Sort</Text>
+                        </TouchableOpacity>
+                    }
+                >
+                    <Menu.Item onPress={() => displaySortedBy("expensive")} title="Expensive" />
+                    <Menu.Item onPress={() => displaySortedBy("cheapest")} title="Cheapest" />
+                    <Menu.Item onPress={() => displaySortedBy("recent")} title="Recent" />
+                    <Menu.Item onPress={() => displaySortedBy("oldest")} title="Oldest" />
+                    <Divider />
+                </Menu>
+
+                {/* Filtered by */}
+                <Menu
+                    visible={filterClicked}
+                    onDismiss={() => setFilterClicked(false)}
+                    
+                    anchor={
+                        <TouchableOpacity style={styles.sortButton} onPress={() => setFilterClicked(true)}>
+                            <Icon name="filter-list" size={30} color="black" />
+                            <Text>Filter</Text>
+                        </TouchableOpacity>
+                    }
+                >
+                    
+                    <Menu.Item onPress={() => displayFilteredBy("> $100")} title="> $100" />
+                    <Menu.Item onPress={() => displayFilteredBy("< $100")} title="< $100" />
+                    <Menu.Item onPress={() => displayFilteredBy("Used")} title="Used" />
+                    <Menu.Item onPress={() => displayFilteredBy("New")} title="New" />
+                    
+                    <Divider />
+                </Menu>
+
+                 
+                {/* Search by tag UI */}
+                <View style={styles.searchBar}>
+
+                    <TouchableOpacity>
+                        <Icon name="search" size={25} color="black" />
+                    </TouchableOpacity>
+
+                    <TextInput
+                            placeholder="Search listings here!"
+                            placeholderTextColor="gray"
+                            value={thisTag}
+                            onChangeText={setThisTag}
+                            onSubmitEditing={searchByTag} 
+                        />
+                </View>
+
+            </View>
+        
         <FlatList
             style={styles.productsList}
             contentContainerStyle={styles.productsListContainer}
@@ -84,6 +213,8 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
                 />
             }
         />
+        </View>
+        </PaperProvider>
     );
 }
 
@@ -99,5 +230,35 @@ const getStyles = (colorScheme: "light" | "dark") => {
             backgroundColor: backgroundColor[colorScheme],
             marginHorizontal: 14,
         },
+        sortLayout: {
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "center",
+            paddingTop: 10,
+            paddingBottom: 5, 
+            gap: 10,
+        },
+        sortButton: {
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "#00bfff",
+            borderRadius: 10,
+            minWidth: 70,  
+            gap: 2,
+        },
+        searchBar: {
+            flexDirection: "row",
+            backgroundColor: "#00bfff", 
+            borderRadius: 10,
+            color: "black",
+            minWidth: 70,
+            paddingTop: 3,
+            paddingBottom: 3,
+            alignItems: "center",
+            justifyContent: "center",
+            textAlignVertical: "center"
+            
+        },
+
     });
 };

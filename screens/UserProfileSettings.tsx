@@ -1,26 +1,44 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-
 import { updateExistingUser } from "@/services/UserServices";
+import { useAuth } from "@/AuthContext";
 
 export function UserProfileSettings() {
 
+  const { user } = useAuth(); // Get authenticated user
+
   // Mandatory Fields
   const [email, setEmail] = useState("");
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
   // Optional Fields
   const [description, setDescription] = useState("");
   // const [profilePicture, setProfilePicture] = useState("null");
+
+
+  // Function to update username in Firestore
+  const usersUsernameUpdate = () => {
+    if (user?.uid) {
+      updateExistingUser(user.uid, { username });
+    }
+  };
+
+  // Function to update description in Firestore
+  const usersDescriptionUpdate = () => {
+    if (user?.uid) {
+      updateExistingUser(user.uid, { description: description || "Description not created!" });
+    }
+  };
   
   return (
+
+    /* Form Fields */
+
     <View style={styles.basicLayout}>
       <Text style={styles.pageLabel}>User Settings</Text>
 
-      {/* Form Fields */}
+      
       <View style={styles.formContainer}>
         <Text style={styles.formLabel}>Email:</Text> 
         <View style={styles.row}>
@@ -30,31 +48,6 @@ export function UserProfileSettings() {
       </View>
 
       <View style={styles.formContainer}>
-        <Text style={styles.formLabel}>First Name:</Text> 
-        <View style={styles.row}>
-          <TextInput style={styles.text} value={firstname} onChangeText={setFirstName} />
-          <Button title="Save" />
-        </View>
-      </View>
-
-      
-      <View style={styles.formContainer}>
-        <Text style={styles.formLabel}>Last Name:</Text> 
-        <View style={styles.row}>
-          <TextInput style={styles.text} value={lastname} onChangeText={setLastName} />
-          <Button title="Save" />
-        </View>
-      </View>
-
-      <View style={styles.formContainer}>
-        <Text style={styles.formLabel}>Username:</Text> 
-        <View style={styles.row}>
-          <TextInput style={styles.text} value={username} onChangeText={setUsername} />
-          <Button title="Save" />
-        </View>
-      </View>
- 
-      <View style={styles.formContainer}>
         <Text style={styles.formLabel}>Password:</Text> 
         <View style={styles.row}>
           <TextInput style={styles.text} value={password} onChangeText={setPassword} />
@@ -62,12 +55,27 @@ export function UserProfileSettings() {
         </View>
       </View>
 
+      {/* Done */}
+      <View style={styles.formContainer}>
+        <Text style={styles.formLabel}>Username:</Text> 
+        <View style={styles.row}>
+          <TextInput style={styles.text} value={username} onChangeText={setUsername} />
+          <Button title="Save" onPress={() => { 
+            usersUsernameUpdate(); 
+            alert("Username Changed!"); 
+          }} />
+        </View>
+      </View>
     
+      {/* Done */}
       <View style={styles.formContainer}>
         <Text style={styles.formLabel}>User Description:</Text> 
         <View style={styles.row}>
           <TextInput style={styles.text} value={description} onChangeText={setDescription} />
-          <Button title="Save"/>
+          <Button title="Save" onPress={() => { 
+            usersDescriptionUpdate(); 
+            alert("Description changed or created!"); 
+          }} />
         </View>
       </View>
 

@@ -55,6 +55,6 @@ export async function updateExistingUser(id: string, updateThese: any) {
     console.log(`Successfully updated user id number ${id} and its data fields of`, updateThese);
 
   } catch (error) {
-    console.error("This listing does not exist!!", error);
+    console.error("This user does not exist!!", error);
   }
 }

@@ -93,7 +93,7 @@ export function ListingDetails() {
 
                                 <Text style={styles.description}>Condition: {listing.isNew ? "New" : "Used"}</Text>
                                 <Text style={styles.description}>{listing.description}</Text>
-                                <Text style={styles.description}>{listing.tags.join(", ")}</Text>
+                                <Text style={styles.description}>{listing.tags.join(" ")}</Text>
 
                             </View>
                         </Animated.View>
