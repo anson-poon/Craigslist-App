@@ -12,7 +12,7 @@ interface ListingProps {
     onPress: () => void;
 }
 
-export function Listing({ id, name, price, image, description, category, isNew, onPress }: ListingProps) {
+export function ListingHorizontal({ id, name, price, image, isNew, onPress }: ListingProps) {
     const colorScheme = useColorScheme();
     const styles = getStyles(colorScheme ?? "light");
 
@@ -22,63 +22,48 @@ export function Listing({ id, name, price, image, description, category, isNew, 
             <View style={styles.infoContainer}>
                 <Text style={styles.name}>{name}</Text>
                 <Text style={styles.price}>${price}</Text>
-                <Text style={styles.description}>{description}</Text>
-                <Text style={styles.category}>Category: {category}</Text>
-                <Text style={styles.condition}>Condition: {isNew ? "New" : "Used"}</Text>
+                <Text style={styles.condition}>{isNew ? "New" : "Used"}</Text>
             </View>
         </TouchableOpacity>
     );
 }
 
 const getStyles = (colorScheme: "light" | "dark") => {
-    const backgroundColor = { light: "#ffffff", dark: "#000000" };
+    const cardBackgroundColor = { light: "#ffffff", dark: "#222222" };
     const textColor = { light: "#000000", dark: "#ffffff" };
 
     return StyleSheet.create({
-        productsList: {
-            backgroundColor: backgroundColor[colorScheme],
-        },
-        productsListContainer: {
-            backgroundColor: backgroundColor[colorScheme],
-            marginHorizontal: 14,
-        },
         card: {
-            backgroundColor: colorScheme === "dark" ? "#222" : "white",
+            flex: 1,
+            flexWrap: "wrap",
+            flexDirection: "row",
+            backgroundColor: cardBackgroundColor[colorScheme],
             borderRadius: 12,
             shadowOpacity: 0.2,
             shadowRadius: 4,
             shadowColor: "black",
-            shadowOffset: {
-                height: 0,
-                width: 0,
-            },
             elevation: 2,
-            marginVertical: 12,
+            marginVertical: 8,
         },
         thumb: {
-            height: 200,
+            width: "40%",
+            height: 150,
             borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-            width: "100%",
+            borderBottomLeftRadius: 10,
         },
         infoContainer: {
+            flex: 1,
             padding: 12,
         },
         name: {
-            fontSize: 20,
-            fontWeight: "bold",
+            fontSize: 18,
+            fontWeight: "600",
             color: textColor[colorScheme],
+            marginBottom: 8,
         },
         price: {
             fontSize: 18,
-            fontWeight: "400",
-            marginBottom: 8,
-            color: textColor[colorScheme],
-        },
-        description: {
-            color: textColor[colorScheme],
-        },
-        category: {
+            fontWeight: "500",
             color: textColor[colorScheme],
         },
         condition: {

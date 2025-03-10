@@ -8,11 +8,11 @@ import { useColorScheme } from "react-native";
 
 import { ListingsList } from "../../../screens/Browse";
 import { ListingDetails } from "../../../screens/ListingDetails";
+import { MyListingsList } from "../../../screens/MyListings";
 import { Favorites } from "../../../screens/Favorites";
 import { UserProfile } from "../../../screens/UserProfile";
 import { UserProfileSettings } from "../../../screens/UserProfileSettings";
 import { CreateThisListing } from "../../../screens/CreateListing";
-import { UploadImage } from "../../../screens/UploadImage";
 
 import { useAuth } from "@/AuthContext";
 import { getAuth, signOut } from "firebase/auth";
@@ -59,6 +59,33 @@ function BrowseStack() {
                         </TouchableOpacity>
                     ),
                 })}
+            />
+
+            <Stack.Screen
+                name="ListingDetails"
+                component={ListingDetails}
+                options={{
+                    title: "Item",
+                    cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+                    gestureEnabled: true,
+                    gestureDirection: "horizontal",
+                }}
+            />
+        </Stack.Navigator>
+    );
+}
+
+// Stack Navigator for MyListings and ListingDetails
+function MyListingsStack() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name="MyListings"
+                component={MyListingsList}
+                options={{
+                    title: "My Listings",
+                    headerTitleStyle: styles.headerTitle,
+                }}
             />
 
             <Stack.Screen
@@ -138,11 +165,9 @@ export default function TabLayout() {
 
             <Tab.Screen
                 name="MyListings"
-                component={Favorites} // To be replaced with My Listings component
+                component={MyListingsStack}
                 options={{
-                    title: "My Listings",
                     tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
-                    headerShown: true,
                 }}
             />
 
@@ -174,17 +199,6 @@ export default function TabLayout() {
                 options={{
                     title: "User",
                     tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-                }}
-            />
-
-            <Tab.Screen
-                name="UploadImage"
-                component={UploadImage} // To be replaced with More component
-                options={{
-                    title: "Upload (Remove later)",
-                    tabBarIcon: ({ color }) => <TabBarIcon name="image" color={color} />,
-                    headerShown: true,
-                    headerTitleStyle: styles.headerTitle,
                 }}
             />
         </Tab.Navigator>

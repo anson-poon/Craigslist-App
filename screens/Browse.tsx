@@ -111,6 +111,13 @@ export function ListingsList({ navigation }: { navigation: NavigationProp<any> }
             setListings(await getListingsList());
             setRefreshing(false);
         }, 2000);
+
+        const msg = "Listings refreshed";
+        if (Platform.OS === "android") {
+            ToastAndroid.show(msg, ToastAndroid.SHORT);
+        } else {
+            Alert.alert(msg);
+        }
     };
 
     return (

@@ -101,6 +101,22 @@ export async function getListingsList() {
 }
 
 /*
+  Retrieves a list of listings by a specific user ID
+  Returns an array of listing objects
+*/
+export async function getListsListByUserID(userID: string) {
+  try {
+    const listingsCol = collection(FIREBASE_DB, "listings");
+    const listingsSnapshot = await getDocs(listingsCol);
+    return listingsSnapshot.docs.map(formatListing).filter((listing) => listing.userID === userID);
+  
+  } catch (error) {
+    console.error("Error fetching listings:", error);
+    return [];
+  }
+}
+
+/*
   Retrieves a listing by its ID
   Returns a listing object if the listing exists, otherwise it returns null.
 */
