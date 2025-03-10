@@ -38,22 +38,6 @@ export function UserProfileSettings() {
     <View style={styles.basicLayout}>
       <Text style={styles.pageLabel}>User Settings</Text>
 
-      
-      <View style={styles.formContainer}>
-        <Text style={styles.formLabel}>Email:</Text> 
-        <View style={styles.row}>
-          <TextInput style={styles.text} value={email} onChangeText={setEmail} />
-          <Button title="Save"  />
-        </View>
-      </View>
-
-      <View style={styles.formContainer}>
-        <Text style={styles.formLabel}>Password:</Text> 
-        <View style={styles.row}>
-          <TextInput style={styles.text} value={password} onChangeText={setPassword} />
-          <Button title="Save" />
-        </View>
-      </View>
 
       {/* Done */}
       <View style={styles.formContainer}>
